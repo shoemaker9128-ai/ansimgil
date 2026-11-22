@@ -33,40 +33,4 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 <div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발지를 찍으세요</span></div>
 <div class="card" id="routeInfo">아직 루트가 없어요. 출발지(A)와 목적지(B)를 찍으면 안심루트를 찾아요.</div>
 <div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요"><button onclick="addMemo()">메모 저장</button></div>
-<div id="memoList"></div>
-</div>
-<div id="layerPanel"><h3 style="margin:0 0 8px">레이어 (19개)</h3><div id="layers"></div></div>
-
-<!-- 가이드대로: 실행 코드보다 먼저, body에서 SDK 불러오기. autoload 없음, // 로 시작 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=de4f0d3d59385d021ae8a9f2f9d8d89d"></script>
-<script>
-var LAYERS = [
-    {cat:'치안안전',name:'범죄주의구간(전체)',code:'IF_0087'},
-    {cat:'치안안전',name:'어린이대상범죄주의구간',code:'IF_0081'},
-    {cat:'치안안전',name:'노인대상범죄주의구간',code:'IF_0082'},
-    {cat:'치안안전',name:'여성밤길치안안전 - 전체',code:'IF_0080'},
-    {cat:'치안안전',name:'치안사고통계(전체)',code:'IF_0075'},
-    {cat:'치안안전',name:'치안시설',code:'IF_0036'},
-    {cat:'치안안전',name:'아동안전지킴이집',code:'IF_0055'},
-    {cat:'시설안전',name:'안전비상벨',code:'IF_0032'},
-    {cat:'시설안전',name:'CCTV정보',code:'IF_0131'},
-    {cat:'시설안전',name:'보안등',code:'IF_0102'},
-    {cat:'시설안전',name:'약자보호시설',code:'IF_0053'},
-    {cat:'교통안전',name:'교통사고다발구역',code:'IF_0093'},
-    {cat:'교통안전',name:'대형교통사고발생정보',code:'IF_0094'},
-    {cat:'교통안전',name:'상습결빙구간',code:'IF_0103'},
-    {cat:'교통안전',name:'도로시설(가드레일)',code:'IF_0096'},
-    {cat:'교통안전',name:'도로시설(인도)',code:'IF_0095'},
-    {cat:'교통안전',name:'도로시설(횡단보도)',code:'IF_0097'},
-    {cat:'교통안전',name:'도로시설(스쿨존)',code:'IF_0098'},
-    {cat:'교통안전',name:'자전거길',code:'IF_0101'},
-];
-var map, markers={}, routeLine=null, A=null, B=null, mode='walk';
-// 가이드 방식: kakao.maps.load 안 쓰고 바로 생성
-try{
-  var container = document.getElementById('map');
-  var options = { center: new kakao.maps.LatLng(37.5665,126.9780), level: 5 };
-  map = new kakao.maps.Map(container, options);
-  document.getElementById('msg').textContent = '카카오 지도로 열렸어요. 지도 아무 데나 찍어보세요.';
-  document.getElementById('msg').style.background = '#dcfce7';
-  kakao
+<div id="
