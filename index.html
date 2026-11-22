@@ -1,15 +1,14 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>동네안심길 - ansimgil</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <style>
-*{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#fff;color:#111;display:flex;flex-direction:column}
-header{height:52px;flex-shrink:0;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #e5e7eb}
-#kakaoBanner{flex-shrink:0;background:#fef3c7;padding:8px 12px;font-size:13px}
-#mapError{display:none;flex-shrink:0;margin:10px;background:#fff;border:2px solid #ef4444;border-radius:12px;padding:10px;font-size:13px;line-height:1.6}
-#map{flex:1;min-height:350px;background:#dde}
-.panel{flex-shrink:0;background:#fff;border-top:1px solid #e5e7eb;padding:10px 12px;max-height:38vh;overflow:auto}
-.panel.collapsed{max-height:52px;overflow:hidden}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#fff;color:#111}
+header{height:52px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #e5e7eb}
+#kakaoBanner{background:#fef3c7;padding:8px 12px;font-size:13px}
+#mapError{display:none;margin:10px;background:#fff;border:2px solid #ef4444;border-radius:12px;padding:10px;font-size:13px;line-height:1.6}
+#map{height:58vh;min-height:320px;background:#dde}
+.panel{background:#fff;border-top:1px solid #e5e7eb;padding:10px 12px}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center} button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px}
 button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}
 .card{margin-top:8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px;line-height:1.5}
@@ -20,7 +19,7 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 </style></head>
 <body>
 <header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
-<div id="kakaoBanner">지도 여는 중…</div>
+<div id="kakaoBanner">1단계: 페이지 열림 — 지도 불러오는 중…</div>
 <div id="mapError"></div>
 <div id="map"></div>
 <div class="panel" id="bottomPanel">
@@ -30,16 +29,16 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 <button id="mode-bike" onclick="setMode('bike')">자전거</button>
 <button id="mode-car" onclick="setMode('car')">차량</button>
 <button onclick="clearAll()">지우기</button><button onclick="swapAB()">A↔B</button>
-<button onclick="togglePanel()" style="margin-left:auto">⬆ 패널 접기 / 펼치기</button>
 </div>
 <div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발지를 찍으세요</span></div>
 <div class="card" id="routeInfo">아직 루트가 없어요. 출발지(A)와 목적지(B)를 찍으면 안심루트를 찾아요.</div>
 <div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요"><button onclick="addMemo()">메모 저장</button></div>
 <div id="memoList"></div>
 </div>
-<div id="layerPanel"><h3 style="margin:0 0 8px">레이어</h3><div id="layers"></div><div id="checkResult" class="small" style="margin-top:8px"></div></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div id="layerPanel"><h3 style="margin:0 0 8px">레이어</h3><div id="layers"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
+document.getElementById('kakaoBanner').textContent = '2단계: 스크립트 실행됨 — Leaflet 확인 중…';
 const KAKAO_JS_KEY = "de4f0d3d59385d021ae8a9f2f9d8d89d";
 const SAFEMAP_KEY = "2NG9WDGV-2NG9-2NG9-2NG9-2NG9WDGVEW";
 let safemapKey = localStorage.getItem('ansimgil_key') || SAFEMAP_KEY;
@@ -65,35 +64,19 @@ const LAYERS = [
     {cat:'교통안전',name:'자전거길',code:'IF_0101'},
 ];
 let map, markers={}, wmsLayers={}, routeLayer=null, A=null, B=null, mode='walk';
-let useKakao=false;
-function initLeaflet(){
-  document.getElementById('kakaoBanner').textContent='일반 지도로 열렸어요. 지도 아무 데나 찍어보세요.';
-  map = L.map('map').setView([37.5665,126.9780],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
-  map.on('click',e=>onMapClick(e.latlng.lat,e.latlng.lng));
-  tryKakao();
+if(typeof L === 'undefined'){
+  document.getElementById('kakaoBanner').textContent = 'Leaflet이 안 불러와졌어요. 인터넷/광고차단 확인하고 새로고침 해주세요.';
+} else {
+  document.getElementById('kakaoBanner').textContent = '3단계: 지도 만드는 중…';
+  try{
+    map = L.map('map').setView([37.5665,126.9780],13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+    map.on('click',e=>onMapClick(e.latlng.lat,e.latlng.lng));
+    document.getElementById('kakaoBanner').textContent = '일반 지도로 열렸어요. 지도 아무 데나 찍어보세요. (카카오는 도메인 등록 후 자동 전환)';
+  }catch(e){
+    document.getElementById('kakaoBanner').textContent = '지도 생성 실패: ' + e.message;
+  }
 }
-function tryKakao(){
-  const s=document.createElement('script'); s.src='https://dapi.kakao.com/v2/maps/sdk.js?appkey='+KAKAO_JS_KEY+'&autoload=false';
-  s.onload=()=>{
-    try{
-      kakao.maps.load(()=>{
-        try{
-          const testDiv=document.createElement('div');
-          const c=new kakao.maps.LatLng(37.5665,126.9780);
-          const kmap=new kakao.maps.Map(testDiv,{center:c,level:5});
-          document.getElementById('kakaoBanner').textContent='카카오 지도로 열렸어요.';
-          document.getElementById('mapError').style.display='block';
-          document.getElementById('mapError').innerHTML='카카오 인증은 됐어요. 다음 버전에서 카카오 지도로 완전히 바꿀게요. 지금은 일반 지도로 찍기가 돼요.';
-          useKakao=false;
-        }catch(e){}
-      });
-    }catch(e){}
-  };
-  document.head.appendChild(s);
-}
-initLeaflet();
-function togglePanel(){ const p=document.getElementById('bottomPanel'); p.classList.toggle('collapsed'); if(map) setTimeout(()=>map.invalidateSize(),50); }
 function onLocToggle(){
   const on=document.getElementById('useLoc').checked; if(!on) return;
   if(!navigator.geolocation){ alert('위치 지원 안 함'); document.getElementById('useLoc').checked=false; return; }
@@ -141,4 +124,7 @@ function toggleWMS(idx,on){
 }
 function toggleLayer(){ const p=document.getElementById('layerPanel'); p.style.display=p.style.display==='block'?'none':'block'; renderLayers(); }
 function loadMemos(){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map((m,i)=>`<div class="memo"><b>${m.date}</b><br>${m.text} <button onclick="delMemo(${i})" style="float:right">삭제</button></div>`).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
-function addMemo(){ const t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); const arr=JSON.parse(local
+function addMemo(){ const t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.unshift({text:t,date:new Date().toLocaleString()}); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); document.getElementById('memoText').value=''; loadMemos(); }
+function delMemo(i){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); loadMemos(); }
+renderLayers(); loadMemos();
+</script></body></html>
