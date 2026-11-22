@@ -1,145 +1,123 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
 <meta charset="utf-8"/>
 <title>동네안심길 - ansimgil</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif}
 header{height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #e5e7eb}
 #msg{background:#fef3c7;padding:8px 12px;font-size:13px;word-break:break-all}
-#map{width:100%;height:520px;background:#dbeafe}
+#map{width:100%;height:500px;background:#eee}
 .panel{padding:10px 12px}
-.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px}
-button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
-button.primary{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
-input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center} button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px}
+button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}
 .card{margin-top:8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px}
 .small{font-size:12px;color:#666}
-.score{margin-top:8px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;padding:10px}
-.score b{font-size:22px}
-.bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:4px 0 8px}
-.bar div{height:100%;background:#059669}
-.layerRow{margin:6px 0;font-size:13px}
-#layerPanel{display:block;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 12px}
-#layerPanel label{display:inline-block;margin:3px 6px 3px 0;font-size:13px;background:#f8fafc;border:1px solid #eee;border-radius:999px;padding:5px 9px}
+#layerPanel{display:none;position:fixed;right:10px;top:62px;width:300px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border-radius:14px;padding:12px;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .memo{border:1px solid #eee;border-radius:10px;padding:8px;font-size:13px;margin-top:6px}
-.saved{border:1px solid #dbeafe;background:#eff6ff;border-radius:10px;padding:8px;font-size:13px;margin-top:6px}
 </style>
 </head>
 <body>
-<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어 접기/펼치기</button></header>
+<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
 <div id="msg">카카오 지도 불러오는 중…</div>
-<div id="map"></div>
-<div id="layerPanel"><b>안전 레이어 - 항상 활성화</b> <span class="small">체크를 끄면 안전 점수가 깎여요. 점수는 이 레이어 기준으로 계산해요.</span><div id="layers"></div></div>
+<div id="map" style="width:100%;height:500px;"></div>
 <div class="panel">
 <div class="row">
-<label style="font-size:13px"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 📍 내 위치를 출발로 연결</label>
+<label style="font-size:13px"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 📍 내 위치를 출발지로 연결</label>
 <button id="mode-walk" class="active" onclick="setMode('walk')">도보</button>
 <button id="mode-bike" onclick="setMode('bike')">자전거</button>
 <button id="mode-car" onclick="setMode('car')">차량</button>
-<button onclick="swapAB()">출발↔도착 바꾸기</button>
-<button onclick="resetRoute()" style="background:#fee2e2">루트 초기화</button>
-<button class="primary" onclick="saveRoute()">루트 저장</button>
+<button onclick="clearAll()">지우기</button><button onclick="swapAB()">A↔B</button>
 </div>
-<div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발을 찍으세요</span></div>
-<div class="card" id="routeInfo">아직 루트가 없어요. 출발과 도착을 찍으면 안심루트를 찾아요.</div>
-<div class="score" id="safetyBox" style="display:none">
-<b id="safetyScore">안전 점수 0점</b> <span class="small" id="safetyGrade"></span>
-<div class="bar"><div id="safetyBar" style="width:0%"></div></div>
-<div id="layerScore" style="font-size:13px;line-height:1.8"></div>
-<div style="font-size:13px;line-height:1.6" id="safetyWhy"></div>
-<div style="font-size:13px;line-height:1.6" id="safetyDetail"></div>
-</div>
+<div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발지를 찍으세요</span></div>
+<div class="card" id="routeInfo">아직 루트가 없어요. 출발지(A)와 목적지(B)를 찍으면 안심루트를 찾아요.</div>
 <div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요"><button onclick="addMemo()">메모 저장</button></div>
 <div id="memoList"></div>
-<h3 style="margin:16px 0 4px;font-size:15px">저장한 루트</h3>
-<div id="savedList"><div class="small">아직 저장한 루트가 없어요.</div></div>
 </div>
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&libraries=services,clusterer,drawing"></script>
-<script>
-var LAYERS=[
- {cat:'치안안전',name:'범죄주의구간(전체)',code:'IF_0087'},
- {cat:'치안안전',name:'어린이대상범죄주의구간',code:'IF_0081'},
- {cat:'치안안전',name:'노인대상범죄주의구간',code:'IF_0082'},
- {cat:'치안안전',name:'여성밤길치안안전 - 전체',code:'IF_0080'},
- {cat:'치안안전',name:'치안사고통계(전체)',code:'IF_0075'},
- {cat:'치안안전',name:'치안시설',code:'IF_0036'},
- {cat:'치안안전',name:'아동안전지킴이집',code:'IF_0055'},
- {cat:'시설안전',name:'안전비상벨',code:'IF_0032'},
- {cat:'시설안전',name:'CCTV정보',code:'IF_0131'},
- {cat:'시설안전',name:'보안등',code:'IF_0102'},
- {cat:'시설안전',name:'약자보호시설',code:'IF_0053'},
- {cat:'교통안전',name:'교통사고다발구역',code:'IF_0093'},
- {cat:'교통안전',name:'대형교통사고발생정보',code:'IF_0094'},
- {cat:'교통안전',name:'상습결빙구간',code:'IF_0103'},
- {cat:'교통안전',name:'도로시설(가드레일)',code:'IF_0096'},
- {cat:'교통안전',name:'도로시설(인도)',code:'IF_0095'},
- {cat:'교통안전',name:'도로시설(횡단보도)',code:'IF_0097'},
- {cat:'교통안전',name:'도로시설(스쿨존)',code:'IF_0098'},
- {cat:'교통안전',name:'자전거길',code:'IF_0101'}
+<div id="layerPanel"><h3 style="margin:0 0 8px">레이어 (19개)</h3><div id="layers"></div></div>
+
+<!-- 블로그 글 그대로: //dapi, libraries 추가, autoload 없음 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&libraries=services,clusterer,drawing"></script>
+<script type="application/javascript">
+var LAYERS = [
+    {cat:'치안안전',name:'범죄주의구간(전체)',code:'IF_0087'},
+    {cat:'치안안전',name:'어린이대상범죄주의구간',code:'IF_0081'},
+    {cat:'치안안전',name:'노인대상범죄주의구간',code:'IF_0082'},
+    {cat:'치안안전',name:'여성밤길치안안전 - 전체',code:'IF_0080'},
+    {cat:'치안안전',name:'치안사고통계(전체)',code:'IF_0075'},
+    {cat:'치안안전',name:'치안시설',code:'IF_0036'},
+    {cat:'치안안전',name:'아동안전지킴이집',code:'IF_0055'},
+    {cat:'시설안전',name:'안전비상벨',code:'IF_0032'},
+    {cat:'시설안전',name:'CCTV정보',code:'IF_0131'},
+    {cat:'시설안전',name:'보안등',code:'IF_0102'},
+    {cat:'시설안전',name:'약자보호시설',code:'IF_0053'},
+    {cat:'교통안전',name:'교통사고다발구역',code:'IF_0093'},
+    {cat:'교통안전',name:'대형교통사고발생정보',code:'IF_0094'},
+    {cat:'교통안전',name:'상습결빙구간',code:'IF_0103'},
+    {cat:'교통안전',name:'도로시설(가드레일)',code:'IF_0096'},
+    {cat:'교통안전',name:'도로시설(인도)',code:'IF_0095'},
+    {cat:'교통안전',name:'도로시설(횡단보도)',code:'IF_0097'},
+    {cat:'교통안전',name:'도로시설(스쿨존)',code:'IF_0098'},
+    {cat:'교통안전',name:'자전거길',code:'IF_0101'},
 ];
-var map=null, markers={}, routeLine=null, A=null, B=null, mode='walk', lastRoute=null, lastScore=null;
-function showMsg(t,c){var m=document.getElementById('msg');m.textContent=t;m.style.background=c;}
-function initMap(){
-  try{
-    var container=document.getElementById('map');
-    var options={center:new kakao.maps.LatLng(37.5665,126.9780),level:5};
-    map=new kakao.maps.Map(container,options);
-    document.getElementById('msg').style.background='#dcfce7';
-    showMsg('카카오 지도로 열렸어요. 지도 아무 데나 찍어보세요.','#dcfce7');
-    kakao.maps.event.addListener(map,'click',function(e){onMapClick(e.latLng.getLat(),e.latLng.getLng());});
-    renderLayers(); loadMemos(); loadSaved();
-  }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); }
-}
-if(location.protocol==='file:'){
-  showMsg('file:// 로 열면 안 돼요. https://shoemaker9128-ai.github.io/ansimgil/ 로 열어주세요.','#fecaca');
-}else if(typeof kakao==='undefined'||!kakao.maps){
-  showMsg('카카오 SDK가 안 왔어요. 도메인 https://shoemaker9128-ai.github.io 가 등록+저장됐는지 확인하고, 강력 새로고침(Ctrl+Shift+R) 해보세요.','#fecaca');
-}else{
-  if(kakao.maps.load){ kakao.maps.load(initMap); } else { initMap(); }
-  setTimeout(function(){ if(!map) showMsg('지도가 5초 안에 안 떴어요. 강력 새로고침(Ctrl+Shift+R) 후 다시 열어보세요.','#fecaca'); },5000);
-}
+var map, markers={}, routeLine=null, A=null, B=null, mode='walk';
+function showMsg(text, color){ var m=document.getElementById('msg'); m.textContent=text; m.style.background=color; }
+
+$(function(){
+  if (location.protocol === 'file:') {
+    showMsg('file:// 로 열면 안 돼요. https://shoemaker9128-ai.github.io/ansimgil/ 로 열어주세요.', '#fecaca');
+    return;
+  }
+  var container = document.getElementById('map');
+  var options = { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 5 };
+  map = new kakao.maps.Map(container, options);
+  showMsg('카카오 지도로 열렸어요. 지도 아무 데나 찍어보세요.', '#dcfce7');
+  kakao.maps.event.addListener(map, 'click', function(e){ onMapClick(e.latLng.getLat(), e.latLng.getLng()); });
+  renderLayers(); loadMemos();
+});
 function onLocToggle(){
   var on=document.getElementById('useLoc').checked; if(!on) return;
-  if(!navigator.geolocation){alert('위치 지원 안 함');document.getElementById('useLoc').checked=false;return;}
-  navigator.geolocation.getCurrentPosition(function(p){A={lat:p.coords.latitude,lng:p.coords.longitude,label:'내 위치'};setPin('출발',A.lat,A.lng);document.getElementById('step').textContent='내 위치를 출발로 했어요. 이제 도착을 찍으세요.';if(B)findRoute();},function(){alert('위치 권한 허용 필요');document.getElementById('useLoc').checked=false;});
+  if(!navigator.geolocation){ alert('위치 지원 안 함'); document.getElementById('useLoc').checked=false; return; }
+  navigator.geolocation.getCurrentPosition(function(p){ A={lat:p.coords.latitude,lng:p.coords.longitude,label:'내 위치'}; setPin('A',A.lat,A.lng); document.getElementById('step').textContent='내 위치를 출발지로 했어요. 이제 목적지를 찍으세요.'; if(B) findRoute(); },function(){ alert('위치 권한 허용 필요'); document.getElementById('useLoc').checked=false; });
 }
 function onMapClick(lat,lng){
   if(!map) return;
-  if(!A){A={lat:lat,lng:lng,label:'지도 선택'};setPin('출발',lat,lng);document.getElementById('step').textContent='출발 찍었어요. 이제 도착을 찍으세요.';}
-  else if(!B){B={lat:lat,lng:lng,label:'지도 선택'};setPin('도착',lat,lng);document.getElementById('step').textContent='도착 찍었어요. 안심루트 찾는 중…';findRoute();}
-  else{B={lat:lat,lng:lng,label:'지도 선택'};setPin('도착',lat,lng);findRoute();}
+  if(!A){ A={lat:lat,lng:lng,label:'지도 선택'}; setPin('A',lat,lng); document.getElementById('step').textContent='출발지 찍었어요. 이제 목적지를 찍으세요.'; }
+  else if(!B){ B={lat:lat,lng:lng,label:'지도 선택'}; setPin('B',lat,lng); document.getElementById('step').textContent='목적지 찍었어요. 안심루트 찾는 중…'; findRoute(); }
+  else { B={lat:lat,lng:lng,label:'지도 선택'}; setPin('B',lat,lng); findRoute(); }
 }
 function setPin(which,lat,lng){
   if(markers[which]) markers[which].setMap(null);
-  markers[which]=new kakao.maps.Marker({position:new kakao.maps.LatLng(lat,lng),map:map});
+  markers[which]=new kakao.maps.Marker({position:new kakao.maps.LatLng(lat,lng), map:map});
   map.setCenter(new kakao.maps.LatLng(lat,lng));
 }
 async function findRoute(){
   if(!A||!B) return;
-  var prof=mode==='walk'?'walking':mode==='bike'?'cycling':'driving';
+  var prof = mode==='walk'?'walking':mode==='bike'?'cycling':'driving';
   var url='https://router.project-osrm.org/route/v1/'+prof+'/'+A.lng+','+A.lat+';'+B.lng+','+B.lat+'?overview=full&geometries=geojson&alternatives=3';
   try{
     var r=await fetch(url); var j=await r.json(); var routes=j.routes||[]; if(!routes.length) throw new Error('no route');
     var best=routes[0];
     if(routeLine) routeLine.setMap(null);
-    var path=best.geometry.coordinates.map(function(c){return new kakao.maps.LatLng(c[1],c[0]);});
-    routeLine=new kakao.maps.Polyline({path:path,strokeWeight:6,strokeColor:'#0b2f6b',strokeOpacity:.9});
+    var path=best.geometry.coordinates.map(function(c){ return new kakao.maps.LatLng(c[1],c[0]); });
+    routeLine=new kakao.maps.Polyline({path:path, strokeWeight:6, strokeColor:'#0b2f6b', strokeOpacity:.9});
     routeLine.setMap(map);
-    lastRoute={A:A,B:B,mode:mode,distance:best.distance,duration:best.duration,at:new Date().toLocaleString()};
-    document.getElementById('routeInfo').innerHTML='<b>안심루트</b> · '+(mode==='walk'?'도보':mode==='bike'?'자전거':'차량')+' · 거리 '+(best.distance/1000).toFixed(2)+'km · 약 '+Math.round(best.duration/60)+'분<br><span class="small">출발 '+A.lat.toFixed(5)+','+A.lng.toFixed(5)+' → 도착 '+B.lat.toFixed(5)+','+B.lng.toFixed(5)+'</span>';
-    showSafety(best);
-  }catch(e){document.getElementById('routeInfo').textContent='경로를 불러오지 못했어요.';}
+    document.getElementById('routeInfo').innerHTML='<b>최적 안심루트</b> · '+(mode==='walk'?'도보':mode==='bike'?'자전거':'차량')+' · 거리 '+(best.distance/1000).toFixed(2)+'km · 약 '+Math.round(best.duration/60)+'분<br><span class="small">A '+A.lat.toFixed(5)+','+A.lng.toFixed(5)+' → B '+B.lat.toFixed(5)+','+B.lng.toFixed(5)+'</span>';
+  }catch(e){ document.getElementById('routeInfo').textContent='경로를 불러오지 못했어요.'; }
 }
-function getLayerScores(){
-  var boxes=document.querySelectorAll('#layers input[type=checkbox]');
-  var cats={'치안안전':{total:0,on:0,max:40},'시설안전':{total:0,on:0,max:30},'교통안전':{total:0,on:0,max:30}};
-  LAYERS.forEach(function(L,i){cats[L.cat].total++; if(boxes[i]&&boxes[i].checked) cats[L.cat].on++;});
-  Object.keys(cats).forEach(function(k){cats[k].score=Math.round(cats[k].on/cats[k].total*cats[k].max);});
-  return cats;
+function setMode(m){ mode=m; document.querySelectorAll('[id^=mode-]').forEach(function(b){b.classList.remove('active')}); document.getElementById('mode-'+m).classList.add('active'); if(A&&B) findRoute(); }
+function clearAll(){ A=B=null; Object.values(markers).forEach(function(x){x.setMap(null)}); markers={}; if(routeLine) routeLine.setMap(null); document.getElementById('step').textContent='1단계: 지도에서 출발지를 찍으세요'; document.getElementById('routeInfo').textContent='아직 루트가 없어요.'; document.getElementById('useLoc').checked=false; }
+function swapAB(){ var t=A;A=B;B=t; if(A) setPin('A',A.lat,A.lng); if(B) setPin('B',B.lat,B.lng); if(A&&B) findRoute(); }
+function renderLayers(){
+  var el=document.getElementById('layers'); var cats=[...new Set(LAYERS.map(function(x){return x.cat}))];
+  el.innerHTML=cats.map(function(c){ return '<b>'+c+'</b>'+LAYERS.filter(function(x){return x.cat===c}).map(function(x){ return '<label style="display:block;padding:6px 0;border-bottom:1px solid #f1f1f1;font-size:13px">'+x.name+' <span class="small">'+x.code+'</span></label>'}).join('') }).join('');
 }
-function showSafety(best){
-  var hour=new Date().getHours(); var isNight=hour>=20||hour<6;
-  var cats=getLayerScores
+function toggleLayer(){ var p=document.getElementById('layerPanel'); p.style.display=p.style.display==='block'?'none':'block'; renderLayers(); }
+function loadMemos(){ var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map(function(m,i){ return '<div class="memo"><b>'+m.date+'</b><br>'+m.text+' <button onclick="delMemo('+i+')" style="float:right">삭제</button></div>'}).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
+function addMemo(){ var t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.unshift({text:t,date:new Date().toLocaleString()}); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); document.getElementById('memoText').value=''; loadMemos(); }
+function delMemo(i){ var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); loadMemos(); }
+</script>
+</body>
+</html>
