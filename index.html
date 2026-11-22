@@ -21,4 +21,205 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 .searchBox button{flex:0 0 auto;border:0;background:#166534;color:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:12px;font-weight:800;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
 .searchRes:empty{display:none}.searchRes{margin-top:6px;background:#fff;border:1px solid #e5e7eb;border-radius:11px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}.searchRes>div{padding:10px 11px;cursor:pointer;border-bottom:1px solid #f3f4f6;line-height:1.5;font-size:12px}.searchRes>div:last-child{border-bottom:0}.searchRes>div:hover{background:#f0fdf4}.searchRes .small{font-size:11px;color:#6b7280}
 .swapWrap{display:flex;align-items:center;justify-content:center;position:relative;height:32px;margin:10px 0}.swapWrap:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#d9e8dd}.swapBtn{position:relative;z-index:1;width:26px;height:26px;min-width:26px;border-radius:50%;border:2px solid #fff;background:#166534;color:#fff;font-size:12px;cursor:pointer;box-shadow:0 2px 6px rgba(22,101,52,.25);line-height:1;display:flex;align-items:center;justify-content:center;padding:0}
-.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 0}button{border:1px solid #ddd;background:#fff;padding:6px 9px;border-radius:999px;cursor:pointer;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}button.active{background:#0b2
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 0}button{border:1px solid #ddd;background:#fff;padding:6px 9px;border-radius:999px;cursor:pointer;font-size:12px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
+.confirmRow{display:flex;gap:8px;justify-content:flex-end;padding:12px 0 6px}
+.confirmBtn{border:0;background:#166534;color:#fff;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(22,101,52,.25)}
+.confirmBtn:active{transform:translateY(1px)}
+.resetBtn{border:1px solid #e5e7eb;background:#fff;color:#374151;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.resetBtn:active{transform:translateY(1px)}
+.mode-btn{min-width:48px;font-size:10px;font-weight:700;padding:4px 5px;line-height:1.2;border-width:1.5px;border-radius:999px}.mode-btn .ico{font-size:14px;display:block;line-height:1;margin-bottom:1px}
+#mode-walk{border-color:#fdba74;color:#9a3412}#mode-walk .ico{color:#ea580c}
+#mode-bike{border-color:#6ee7b7;color:#065f46}#mode-bike .ico{color:#059669}
+#mode-car{border-color:#93c5fd;color:#1e3a8a}#mode-car .ico{color:#1d4ed8}
+#mode-walk.active{background:#fff7ed;border-color:#ea580c;color:#9a3412;box-shadow:0 0 0 2px #ffedd5}
+#mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
+#mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
+.modeRow{margin-top:10px;padding:8px 0 2px}
+.loc-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;color:#166534;cursor:pointer;white-space:nowrap;user-select:none;line-height:1}.loc-pill input{-webkit-appearance:none;appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;cursor:pointer;border:1.5px solid #16a34a;border-radius:4px;background:#fff;display:inline-grid;place-content:center}.loc-pill input:checked{background:#166534;border-color:#166534}.loc-pill input:checked::after{content:"✓";color:#fff;font-size:11px;font-weight:900;line-height:1}.loc-pill:has(input:checked){background:#166534;color:#fff;border-color:#166534}.loc-pill:has(input:checked) input{border-color:#fff;background:#fff}.loc-pill:has(input:checked) input:checked::after{color:#166534}
+.nearbyLabel{font-size:12px;font-weight:800;margin:12px 0 5px}
+.nearbyRow{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 6px}.nearbyRow button{padding:6px 11px;font-size:12px;font-weight:700;border:1px solid #dbeafe;background:#fff;color:#1e3a8a;border-radius:999px}.nearbyRow button.active{background:#166534;border-color:#166534;color:#fff}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:10px 11px;font-size:12px;line-height:1.7;margin-top:10px}.small{font-size:11px;color:#666}
+#layerPanel{display:none;position:fixed;right:10px;top:58px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:12px}
+#layerPanel label{display:inline-flex;align-items:center;gap:6px;margin:3px 4px 3px 0;font-size:12px;background:#f8fafc;border:1px solid #eee;border-radius:999px;padding:5px 8px;cursor:pointer}#layerPanel input{accent-color:#166534}
+.saved{border:1px solid #dbeafe;background:#eff6ff;border-radius:11px;padding:10px 11px;font-size:12px;margin-bottom:9px;line-height:1.7}.saved .memoTxt{font-weight:700}.saved button{padding:5px 10px;font-size:11px;font-weight:700;border-radius:999px}
+.score{margin:12px 0;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:11px;padding:10px 11px;font-size:12px;line-height:1.8}.score b{font-size:14px}.score .bar{height:7px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:6px 0}.score .bar div{height:100%;background:#059669}
+.memoRow{display:flex;gap:8px;align-items:center;margin:14px 0}.memoRow input{flex:1;padding:10px 12px;border:1px solid #e5e7eb;border-radius:999px;font-size:13px;outline:none;min-width:0;background:#fff;font-family:'Noto Sans KR',sans-serif}.memoRow input:focus{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}.memoRow button{flex:0 0 auto;border:0;background:#166534;color:#fff;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:700;white-space:nowrap}
+h3{font-weight:800;letter-spacing:-.3px;font-size:14px;margin:14px 0 8px}
+@media(max-width:820px){.layout{flex-direction:column;height:auto}.panel{max-width:none;min-width:0;border-left:0;border-top:1px solid #e5e7eb;height:auto;overflow:visible}#map{height:420px;min-height:420px}.mapWrap{height:420px}.loc-pill{margin-left:0}}
+</style></head><body>
+<header><b>🛡️ 동네안심길</b><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
+<div id="msg"></div>
+<div class="layout">
+<div class="mapWrap"><div id="map"></div></div>
+<div class="panel">
+<div class="titleWrap"><div class="titleIcon">🛡️</div><div><h2>우리동네<span>안심길</span></h2><p>안전한 길로, 마음 편히 걸어요</p></div></div>
+<div class="row modeRow"><button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><label class="loc-pill"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 내 위치</label></div>
+<div class="nearbyLabel">주변검색</div>
+<div class="nearbyRow"><button data-cat="FD6" data-kw="음식점" onclick="searchNearby('FD6','음식점',this)">🍽️ 음식점</button><button data-cat="CE7" data-kw="카페" onclick="searchNearby('CE7','카페',this)">☕ 카페</button><button data-cat="CS2" data-kw="편의점" onclick="searchNearby('CS2','편의점',this)">🏪 편의점</button><button data-cat="HP8" data-kw="병원" onclick="searchNearby('HP8','병원',this)">🏥 병원</button><button data-cat="PM9" data-kw="약국" onclick="searchNearby('PM9','약국',this)">💊 약국</button><button data-cat="OL7" data-kw="주유소" onclick="searchNearby('OL7','주유소',this)">⛽ 주유소</button><button data-cat="PK6" data-kw="주차장" onclick="searchNearby('PK6','주차장',this)">🅿️ 주차장</button><button data-cat="BK9" data-kw="은행" onclick="searchNearby('BK9','은행',this)">🏦 은행</button></div>
+<div id="nearbyResults" class="searchRes"></div>
+<div class="searchLabel"><span class="dot dot-a"></span> 출발</div>
+<div class="searchBox"><input id="fromSearch" type="text" placeholder="출발 검색" onkeydown="if(event.key==='Enter') searchPlace('A')"><button onclick="searchPlace('A')">찾기</button></div>
+<div id="fromResults" class="searchRes"></div>
+<div class="swapWrap"><button class="swapBtn" onclick="swapAB()" title="출발 ↔ 도착 바꾸기">⇅</button></div>
+<div class="searchLabel"><span class="dot dot-b"></span> 도착</div>
+<div class="searchBox"><input id="toSearch" type="text" placeholder="도착 검색" onkeydown="if(event.key==='Enter') searchPlace('B')"><button onclick="searchPlace('B')">찾기</button></div>
+<div id="toResults" class="searchRes"></div>
+<div class="confirmRow"><button class="confirmBtn" onclick="confirmRoute()">확인</button><button class="resetBtn" onclick="resetRoute()">루트 초기화</button></div>
+<div class="card" id="routeInfo">—</div>
+<div class="score" id="safetyBox" style="display:none"><b id="safetyScore">안전 점수 0점</b> <span id="safetyGrade"></span><div class="bar"><div id="safetyBar" style="width:0%"></div></div><div id="safetyFac">✅ 안전시설 0개 +0점</div><div id="safetyDanger">⚠️ 위험지역 0개 -0점</div><div id="safetyDetail">🚶 인도: 확인됨 · 🔶 횡단보도: 확인됨</div></div>
+<div class="memoRow"><input id="memoText" type="text" placeholder="메모"><button onclick="saveRoute()">루트 저장</button></div>
+<h3>내 안심루트</h3><div id="savedList"><div class="small">—</div></div>
+</div>
+</div>
+<div id="layerPanel"><b>안전 레이어</b><div style="margin:6px 0"><label><input type="checkbox" id="showLayersChk" onchange="toggleShowLayers()"> 지도에 레이어 보이기</label></div><div id="layers"></div><div id="wmsStatus" class="small" style="margin-top:8px"></div></div>
+<script>
+const LAYERS=[
+ {cat:'치안안전',name:'범죄주의구간(전체)',code:'IF_0087'},{cat:'치안안전',name:'어린이대상범죄주의구간',code:'IF_0081'},{cat:'치안안전',name:'노인대상범죄주의구간',code:'IF_0082'},{cat:'치안안전',name:'여성밤길치안안전 - 전체',code:'IF_0080'},{cat:'치안안전',name:'치안사고통계(전체)',code:'IF_0075'},{cat:'치안안전',name:'치안시설',code:'IF_0036'},{cat:'치안안전',name:'아동안전지킴이집',code:'IF_0055'},
+ {cat:'시설안전',name:'안전비상벨',code:'IF_0032'},{cat:'시설안전',name:'CCTV정보',code:'IF_0131'},{cat:'시설안전',name:'보안등',code:'IF_0102'},{cat:'시설안전',name:'약자보호시설',code:'IF_0053'},
+ {cat:'교통안전',name:'교통사고다발구역',code:'IF_0093'},{cat:'교통안전',name:'대형교통사고발생정보',code:'IF_0094'},{cat:'교통안전',name:'상습결빙구간',code:'IF_0103'},{cat:'교통안전',name:'도로시설(가드레일)',code:'IF_0096'},{cat:'교통안전',name:'도로시설(인도)',code:'IF_0095'},{cat:'교통안전',name:'도로시설(횡단보도)',code:'IF_0097'},{cat:'교통안전',name:'도로시설(스쿨존)',code:'IF_0098'},{cat:'교통안전',name:'자전거길',code:'IF_0101'}];
+var ROUTE_COLORS=['#0b2f6b','#059669','#d97706','#dc2626','#7c3aed','#db2777','#0891b2','#65a30d','#ea580c','#0f766e'];
+var pendingRouteColor=null;
+var layersHidden=true;
+var fromName='', toName='';
+var safetyVisible=true;
+var nearbyMarkers=[];
+function toggleShowLayers(){ layersHidden=!document.getElementById('showLayersChk').checked; placeAllLayersOnMap(); }
+var SAFEMAP_KEY='2NG9WDGV-2NG9-2NG9-2NG9-2NG9WDGVEW';
+var wmsOverlays=[];
+function wmsUrlFor(code,bounds){ var sw=bounds.getSouthWest(), ne=bounds.getNorthEast(); return 'https://www.safemap.go.kr/openApiService/wms/getLayer.do?serviceKey='+encodeURIComponent(SAFEMAP_KEY)+'&layer='+encodeURIComponent(code)+'&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS='+encodeURIComponent(code)+'&BBOX='+sw.getLng()+','+sw.getLat()+','+ne.getLng()+','+ne.getLat()+'&WIDTH=1024&HEIGHT=1024&SRS=EPSG:4326&FORMAT=image/png&TRANSPARENT=TRUE'; }
+function placeAllLayersOnMap(){
+  if(!map) return;
+  try{
+    wmsOverlays.forEach(function(o){ try{o.setMap(null);}catch(e){} }); wmsOverlays=[];
+    var boxes=document.querySelectorAll('#layers input[type=checkbox]');
+    var bounds=map.getBounds(); var placed=0;
+    LAYERS.forEach(function(L,i){
+      if(boxes[i] && !boxes[i].checked) return;
+      try{
+        var div=document.createElement('div'); div.style.pointerEvents='none';
+        var img=document.createElement('img'); img.src=wmsUrlFor(L.code,bounds); img.style.width='100vw'; img.style.maxWidth='1024px'; img.style.opacity='0.55'; img.style.pointerEvents='none'; img.onerror=function(){ this.style.display='none'; };
+        div.appendChild(img);
+        var ov=new kakao.maps.CustomOverlay({position:map.getCenter(), content:div, yAnchor:0.5, xAnchor:0.5, clickable:false});
+        if(!layersHidden){ ov.setMap(map); }
+        wmsOverlays.push(ov); placed++;
+      }catch(e){}
+    });
+    var st=document.getElementById('wmsStatus'); if(st) st.textContent='지도에 배치됨: '+placed+'/19개 - 현재 '+(layersHidden?'전부 숨김':'보임');
+  }catch(e){ var st2=document.getElementById('wmsStatus'); if(st2) st2.textContent='레이어 배치 실패 (지도는 정상): '+e.message; }
+}
+var map=null, markers={}, routeLine=null, A=null, B=null, mode='walk', lastRoute=null, lastScore=null, placesService=null, geocoder=null, currentSearchTarget='A';
+function showMsg(t,c){var m=document.getElementById('msg');if(!t){m.style.display='none';return;}m.style.display='block';m.textContent=t;m.style.background=c;}
+function fillInputFromClick(which, lat, lng){
+  var inputId = which==='A' ? 'fromSearch' : 'toSearch';
+  var input = document.getElementById(inputId);
+  var tempName = '지도 찍은 위치 ('+lat.toFixed(5)+', '+lng.toFixed(5)+')';
+  if(which==='A'){ fromName=tempName; } else { toName=tempName; }
+  if(input) { input.value=tempName; input.style.background='#fff7ed'; setTimeout(function(){ input.style.background='transparent'; },600); }
+  if(geocoder){
+    try{
+      geocoder.coord2Address(lng, lat, function(result, status){
+        if(status===kakao.maps.services.Status.OK && result && result[0]){
+          var addr = (result[0].road_address && result[0].road_address.address_name) || (result[0].address && result[0].address.address_name) || '';
+          if(addr){
+            if(which==='A'){ fromName=addr; } else { toName=addr; }
+            if(input) input.value=addr;
+            if(A&&B && lastRoute){ lastRoute.fromName=fromName; lastRoute.toName=toName; }
+          }
+        }
+      });
+    }catch(e){}
+  }
+}
+function initMap(){
+  try{
+    map=new kakao.maps.Map(document.getElementById('map'),{center:new kakao.maps.LatLng(37.5665,126.9780),level:5});
+    if(window.kakao.maps.services){ placesService=new kakao.maps.services.Places(); geocoder=new kakao.maps.services.Geocoder(); }
+    kakao.maps.event.addListener(map,'click',function(e){ onMapClick(e.latLng.getLat(), e.latLng.getLng()); });
+    renderLayers(); loadSaved();
+    placeAllLayersOnMap();
+    setTimeout(function(){ try{ map.relayout(); map.setCenter(new kakao.maps.LatLng(37.5665,126.9780)); }catch(e){} },200);
+    window.addEventListener('resize',function(){ try{ map.relayout(); }catch(e){} });
+    var _t=null; kakao.maps.event.addListener(map,'bounds_changed',function(){ clearTimeout(_t); _t=setTimeout(function(){ try{ placeAllLayersOnMap(); }catch(e){} },800); });
+  }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); }
+}
+if(typeof kakao==='undefined'){ showMsg('카카오 SDK가 안 불러와졌어요','#fecaca'); }
+else{
+  kakao.maps.load(initMap);
+  setTimeout(function(){ if(!map) showMsg('지도가 안 떴어요','#fecaca'); },3000);
+}
+function onLocToggle(){var on=document.getElementById('useLoc').checked;if(!on)return;if(!navigator.geolocation){alert('위치 지원 안 함');document.getElementById('useLoc').checked=false;return;}navigator.geolocation.getCurrentPosition(function(p){A={lat:p.coords.latitude,lng:p.coords.longitude};fromName='내 위치';document.getElementById('fromSearch').value=fromName;setPin('출발',A.lat,A.lng);document.getElementById('toSearch').focus();if(B)findRoute(true);},function(){alert('위치 권한 허용 필요');document.getElementById('useLoc').checked=false;});}
+function onMapClick(lat,lng){
+  if(!map) return;
+  if(!A){ A={lat:lat,lng:lng}; setPin('출발',lat,lng); fillInputFromClick('A',lat,lng); }
+  else if(!B){ B={lat:lat,lng:lng}; setPin('도착',lat,lng); fillInputFromClick('B',lat,lng); findRoute(true); }
+  else{ B={lat:lat,lng:lng}; setPin('도착',lat,lng); fillInputFromClick('B',lat,lng); findRoute(true); }
+}
+function setPin(which,lat,lng){if(markers[which])markers[which].setMap(null);markers[which]=new kakao.maps.Marker({position:new kakao.maps.LatLng(lat,lng),map:map,clickable:false});map.setCenter(new kakao.maps.LatLng(lat,lng));}
+function searchPlace(target){ currentSearchTarget=target||'A'; var inputId=target==='A'?'fromSearch':'toSearch'; var kw=document.getElementById(inputId).value.trim(); if(!kw) return; quickSearch(kw,target); }
+function quickSearch(kw, target){
+  currentSearchTarget=target||'A';
+  var targetAtCall = target||'A';
+  if(!placesService){ alert('장소 검색이 아직 준비 안 됐어요.'); return; }
+  placesService.keywordSearch(kw, function(data,status){
+    var boxId=targetAtCall==='A'?'fromResults':'toResults';
+    if(status!==kakao.maps.services.Status.OK || !data.length){ document.getElementById(boxId).innerHTML='<div class="small">검색 결과가 없어요.</div>'; return; }
+    var list=data.slice(0,5);
+    document.getElementById(boxId).innerHTML=list.map(function(p){
+      var name=(p.place_name||'').replace(/'/g,'’').replace(/"/g,'”');
+      var lat=parseFloat(p.y), lng=parseFloat(p.x);
+      return '<div onclick="pickPlaceDirect(\''+targetAtCall+'\', '+lat+', '+lng+', \''+name+'\')"><b>'+escHtml(p.place_name)+'</b><br><span class="small">'+escHtml(p.road_address_name||p.address_name||'')+'</span></div>';
+    }).join('');
+  });
+}
+function renderNearbyList(data, kwLabel){
+  var box=document.getElementById('nearbyResults');
+  nearbyMarkers.forEach(function(m){ m.setMap(null); }); nearbyMarkers=[];
+  if(!data || !data.length){ box.innerHTML='<div class="small">주변에 '+escHtml(kwLabel)+' 결과가 없어요. 지도를 다른 곳으로 이동하고 다시 눌러보세요.</div>'; return; }
+  var list=data.slice(0,10);
+  var bounds=new kakao.maps.LatLngBounds();
+  list.forEach(function(p){
+    var lat=parseFloat(p.y), lng=parseFloat(p.x);
+    var mk=new kakao.maps.Marker({position:new kakao.maps.LatLng(lat,lng), map:map});
+    kakao.maps.event.addListener(mk,'click',function(){ pickPlaceDirect('B', lat, lng, p.place_name||'선택한 장소'); });
+    nearbyMarkers.push(mk); bounds.extend(new kakao.maps.LatLng(lat,lng));
+  });
+  try{ map.setBounds(bounds); }catch(e){}
+  box.innerHTML='<div class="small" style="padding:6px 11px 0">주변 '+escHtml(kwLabel)+' '+list.length+'개 — 눌러서 도착으로 설정</div>'+list.map(function(p){
+    var name=(p.place_name||'').replace(/'/g,'’').replace(/"/g,'”');
+    var lat=parseFloat(p.y), lng=parseFloat(p.x);
+    var dist = p.distance ? ' · '+p.distance+'m' : '';
+    return '<div onclick="pickPlaceDirect(\'B\', '+lat+', '+lng+', \''+name+'\')"><b>'+escHtml(p.place_name)+'</b><br><span class="small">'+escHtml(p.road_address_name||p.address_name||'')+dist+'</span></div>';
+  }).join('');
+}
+function clearNearby(){
+  nearbyMarkers.forEach(function(m){ try{m.setMap(null);}catch(e){} }); nearbyMarkers=[];
+  var box=document.getElementById('nearbyResults'); if(box) box.innerHTML='';
+  document.querySelectorAll('.nearbyRow button').forEach(function(b){ b.classList.remove('active'); });
+}
+function searchNearby(code, kwLabel, btn){
+  var box=document.getElementById('nearbyResults');
+  if(!map){ alert('지도가 아직 안 떴어요.'); return; }
+  if(!placesService){ box.innerHTML='<div class="small">장소 검색 서비스가 아직 준비 안 됐어요. 새로고침 후 다시 눌러보세요.</div>'; return; }
+  if(btn && btn.classList.contains('active')){ clearNearby(); return; }
+  document.querySelectorAll('.nearbyRow button').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  box.innerHTML='<div class="small">주변 '+escHtml(kwLabel)+' 검색 중…</div>';
+  var center = map.getCenter();
+  try{
+    placesService.categorySearch(code, function(data, status){
+      if(status===kakao.maps.services.Status.OK && data && data.length){ renderNearbyList(data, kwLabel); return; }
+      placesService.keywordSearch(kwLabel, function(data2, status2){
+        if(status2===kakao.maps.services.Status.OK && data2 && data2.length){ renderNearbyList(data2, kwLabel); return; }
+        box.innerHTML='<div class="small">주변에 '+escHtml(kwLabel)+' 결과가 없어요. (상태: '+status+') 지도를 이동하고 다시 눌러보세요.</div>';
+      }, {location:center, radius:3000});
+    }, {location:center, radius:3000, sort:kakao.maps.services.SortBy.DISTANCE});
+  }catch(e){
+    box.innerHTML='<div class="small">주변검색 실패: '+escHtml(e.message)+'</div>';
+  }
+}
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function pickPlaceDirect(which, lat, lng, name){
+  if(!name) name='선택한 장소';
+  var inputId = which==='A' ? 'fromSearch' : 'toSearch';
+  var input = document.getElementById(inputId);
+  if(input){ input.value=name
