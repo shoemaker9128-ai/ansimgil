@@ -9,13 +9,9 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 48px);min-height:560px;overflow:hidden}
 .mapWrap{min-width:0;min-height:0;background:#e8eaf6;overflow:hidden;position:relative}
 #map{width:100%;height:100%;min-height:100%;background:#e8eaf6;display:block}
-.panel{width:400px;max-width:400px;min-width:0;background:#f7fdf8;border-left:1px solid #e5e7eb;padding:14px 14px 18px;overflow-y:auto;overflow-x:hidden;height:100%}
-.titleWrap{display:flex;align-items:center;gap:10px;margin:10px 0 0;padding:10px 12px;background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 100%);border:1px solid #d1fae5;border-radius:14px}
-.titleIcon{width:42px;height:42px;flex:0 0 42px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#166534;border-radius:12px;box-shadow:0 4px 12px rgba(22,101,52,.25)}
-.titleWrap h2{margin:0;font-size:22px;line-height:1.2;font-weight:900;letter-spacing:-.5px;color:#14532d}
-.titleWrap h2 span{color:#166534}
-.titleWrap p{margin:2px 0 0;font-size:12px;font-weight:500;color:#4b5563;letter-spacing:-.2px}
-.searchLabel{font-size:12px;font-weight:800;margin:14px 0 6px;display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 7px}.dot-a{background:#16a34a}.dot-b{background:#dc2626}
+.panel{width:400px;max-width:400px;min-width:0;background:#f7fdf8;border-left:1px solid #e5e7eb;padding:6px 14px 18px;overflow-y:auto;overflow-x:hidden;height:100%}
+.titleImg{width:100%;max-width:372px;display:block;margin:2px 0 2px;border-radius:14px}
+.searchLabel{font-size:12px;font-weight:800;margin:10px 0 6px;display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 7px}.dot-a{background:#16a34a}.dot-b{background:#dc2626}
 .searchBox{display:flex;align-items:center;gap:8px;border:1.5px solid #b9d9c2;border-radius:11px;padding:7px 7px 7px 11px;background:#fff;box-shadow:none;overflow:hidden;width:100%;max-width:100%}.searchBox:focus-within{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}
 .searchBox input{flex:1;min-width:0;border:none!important;border-width:0!important;outline:none!important;box-shadow:none!important;background:transparent!important;background-color:transparent!important;padding:0!important;margin:0!important;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#111827;-webkit-appearance:none;appearance:none}.searchBox input::placeholder{color:#9ca3af}
 .searchBox button{flex:0 0 auto;border:0;background:#166534;color:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:12px;font-weight:800;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
@@ -34,9 +30,9 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 #mode-walk.active{background:#fff7ed;border-color:#ea580c;color:#9a3412;box-shadow:0 0 0 2px #ffedd5}
 #mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
 #mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
-.modeRow{margin-top:10px;padding:8px 0 2px}
+.modeRow{margin-top:2px;padding:4px 0 2px}
 .loc-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;color:#166534;cursor:pointer;white-space:nowrap;user-select:none;line-height:1;flex:0 0 auto}.loc-pill input{-webkit-appearance:none;appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;cursor:pointer;border:1.5px solid #16a34a;border-radius:4px;background:#fff;display:inline-grid;place-content:center}.loc-pill input:checked{background:#166534;border-color:#166534}.loc-pill input:checked::after{content:"✓";color:#fff;font-size:11px;font-weight:900;line-height:1}.loc-pill:has(input:checked){background:#166534;color:#fff;border-color:#166534}.loc-pill:has(input:checked) input{border-color:#fff;background:#fff}.loc-pill:has(input:checked) input:checked::after{color:#166534}
-.nearbyLabel{font-size:12px;font-weight:800;margin:12px 0 5px}
+.nearbyLabel{font-size:12px;font-weight:800;margin:10px 0 5px}
 .nearbyRow{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 6px}.nearbyRow button{padding:6px 11px;font-size:12px;font-weight:700;border:1px solid #dbeafe;background:#fff;color:#1e3a8a;border-radius:999px}.nearbyRow button.active{background:#166534;border-color:#166534;color:#fff}
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:10px 11px;font-size:12px;line-height:1.7;margin-top:10px}.small{font-size:11px;color:#666}
 #layerPanel{display:none;position:fixed;right:10px;top:58px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:12px}
@@ -52,7 +48,7 @@ h3{font-weight:800;letter-spacing:-.3px;font-size:14px;margin:14px 0 8px}
 <div class="layout">
 <div class="mapWrap"><div id="map"></div></div>
 <div class="panel">
-<div class="titleWrap"><div class="titleIcon">🛡️</div><div><h2>우리동네<span>안심길</span></h2><p>안전한 길로, 마음 편히 걸어요</p></div></div>
+<img class="titleImg" src="title.png" alt="우리동네안심길 - 안전한 길로, 마음 편히 걸어요">
 <div class="row modeRow"><button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><label class="loc-pill"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 내 위치</label></div>
 <div class="nearbyLabel">주변검색</div>
 <div class="nearbyRow"><button data-cat="FD6" data-kw="음식점" onclick="searchNearby('FD6','음식점',this)">🍽️ 음식점</button><button data-cat="CE7" data-kw="카페" onclick="searchNearby('CE7','카페',this)">☕ 카페</button><button data-cat="CS2" data-kw="편의점" onclick="searchNearby('CS2','편의점',this)">🏪 편의점</button><button data-cat="HP8" data-kw="병원" onclick="searchNearby('HP8','병원',this)">🏥 병원</button><button data-cat="PM9" data-kw="약국" onclick="searchNearby('PM9','약국',this)">💊 약국</button><button data-cat="OL7" data-kw="주유소" onclick="searchNearby('OL7','주유소',this)">⛽ 주유소</button><button data-cat="PK6" data-kw="주차장" onclick="searchNearby('PK6','주차장',this)">🅿️ 주차장</button><button data-cat="BK9" data-kw="은행" onclick="searchNearby('BK9','은행',this)">🏦 은행</button></div>
@@ -307,40 +303,21 @@ function checkedCodes(){
 function showSafety(best){
   var on=checkedCodes();
   var facPlus=0, danMinus=0, facCount=0, danCount=0;
-  if(mode==='walk'){
-    var walkFac=['IF_0095','IF_0097','IF_0098','IF_0032','IF_0131','IF_0102','IF_0055','IF_0036'];
-    walkFac.forEach(function(c){ if(on[c]){facCount++; facPlus+=3;} });
-    if(on['IF_0101']){facCount++; facPlus+=1;}
-    if(on['IF_0053']){facCount++; facPlus+=2;}
-    if(on['IF_0096']){facCount++; facPlus+=1;}
-    var walkDan=['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'];
-    walkDan.forEach(function(c){ if(on[c]){danCount++; danMinus+=4;} });
-    if(on['IF_0093']){danCount++; danMinus+=3;}
-    if(on['IF_0094']){danCount++; danMinus+=2;}
-    if(on['IF_0103']){danCount++; danMinus+=2;}
-  } else if(mode==='bike'){
-    if(on['IF_0101']){facCount++; facPlus+=6;}
-    ['IF_0095','IF_0097','IF_0032','IF_0131','IF_0102'].forEach(function(c){ if(on[c]){facCount++; facPlus+=2;} });
-    ['IF_0036','IF_0055','IF_0053','IF_0096','IF_0098'].forEach(function(c){ if(on[c]){facCount++; facPlus+=1;} });
-    if(on['IF_0093']){danCount++; danMinus+=6;}
-    if(on['IF_0094']){danCount++; danMinus+=5;}
-    if(on['IF_0103']){danCount++; danMinus+=4;}
-    ['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'].forEach(function(c){ if(on[c]){danCount++; danMinus+=2;} });
-  } else {
-    if(on['IF_0093']){danCount++; danMinus+=6;}
-    if(on['IF_0094']){danCount++; danMinus+=6;}
-    if(on['IF_0103']){danCount++; danMinus+=5;}
-    if(on['IF_0096']){facCount++; facPlus+=3;}
-    ['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'].forEach(function(c){ if(on[c]){danCount++; danMinus+=2;} });
-    ['IF_0036','IF_0032','IF_0131','IF_0102','IF_0055','IF_0053','IF_0095','IF_0097','IF_0098','IF_0101'].forEach(function(c){ if(on[c]){facCount++; facPlus+=1;} });
-  }
+  var bigMinus={ 'IF_0087':5, 'IF_0081':4, 'IF_0082':4, 'IF_0080':4, 'IF_0075':4, 'IF_0093':4, 'IF_0094':3, 'IF_0103':3 };
+  Object.keys(bigMinus).forEach(function(c){ if(on[c]){ danCount++; danMinus+=bigMinus[c]; } });
+  var plusMap={ 'IF_0036':2, 'IF_0055':2, 'IF_0032':2, 'IF_0131':2, 'IF_0102':2, 'IF_0053':2 };
+  Object.keys(plusMap).forEach(function(c){ if(on[c]){ facCount++; facPlus+=plusMap[c]; } });
+  var weakPlus={ 'IF_0095':1, 'IF_0097':1, 'IF_0098':1, 'IF_0101':1, 'IF_0096':1 };
+  Object.keys(weakPlus).forEach(function(c){ if(on[c]){ facCount++; facPlus+=weakPlus[c]; } });
+  if(facPlus>10) facPlus=10;
+  if(danMinus>15) danMinus=15;
   var hour=new Date().getHours();var isNight=hour>=20||hour<6;
   var score=75 + facPlus - danMinus;
-  if(best.distance>3000) score-=4;
-  if(best.distance>8000) score-=4;
-  if(isNight) score-=6;
-  if(score>98) score=98; if(score<40) score=40; lastScore=score;
-  var grade=score>=90?'매우 안전':score>=80?'안전':score>=70?'보통':'주의 필요';
+  if(best.distance>3000) score-=2;
+  if(best.distance>8000) score-=2;
+  if(isNight) score-=3;
+  if(score>92) score=92; if(score<55) score=55; lastScore=score;
+  var grade=score>=88?'매우 안전':score>=78?'안전':score>=68?'보통':'주의 필요';
   document.getElementById('safetyBox').style.display='block';
   document.getElementById('safetyScore').textContent='안전 점수 '+score+'점';
   document.getElementById('safetyGrade').textContent='· '+grade;
