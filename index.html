@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>동네안심길 v3-894d</title>
+<title>동네안심길 - ansimgil</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif}
@@ -19,8 +19,8 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 </style>
 </head>
 <body>
-<header><b>동네안심길 v3-894d</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
-<div id="msg">카카오 지도 불러오는 중… v3-894d</div>
+<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
+<div id="msg">카카오 지도 불러오는 중…</div>
 <div id="map" style="width:100%;height:500px;"></div>
 <div class="panel">
 <div class="row">
@@ -37,12 +37,8 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 </div>
 <div id="layerPanel"><h3 style="margin:0 0 8px">레이어 (19개)</h3><div id="layers"></div></div>
 
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d" onerror="document.getElementById('msg').textContent='SDK 자체가 안 불러와짐 - 도메인/네트워크 문제';document.getElementById('msg').style.background='#fecaca'"></script>
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&autoload=false"></script>
 <script>
-setTimeout(function(){
-  var m=document.getElementById('msg');
-  if(m.textContent.indexOf('불러오는 중')>=0){ m.textContent='3초 지났는데도 SDK 안 옴 - 깃허브 캐시 or 카카오 도메인 문제'; m.style.background='#fecaca'; }
-},3000);
 var LAYERS = [
     {cat:'치안안전',name:'범죄주의구간(전체)',code:'IF_0087'},
     {cat:'치안안전',name:'어린이대상범죄주의구간',code:'IF_0081'},
@@ -65,23 +61,35 @@ var LAYERS = [
     {cat:'교통안전',name:'자전거길',code:'IF_0101'},
 ];
 var map, markers={}, routeLine=null, A=null, B=null, mode='walk';
-try{
-  var container = document.getElementById('map');
-  var options = { center: new kakao.maps.LatLng(37.5665,126.9780), level: 5 };
-  map = new kakao.maps.Map(container, options);
-  document.getElementById('msg').textContent = '카카오 지도로 열렸어요 v3-894d. 지도 아무 데나 찍어보세요.';
-  document.getElementById('msg').style.background = '#dcfce7';
-  kakao.maps.event.addListener(map, 'click', function(e){ onMapClick(e.latLng.getLat(), e.latLng.getLng()); });
-}catch(e){
-  document.getElementById('msg').textContent = '카카오 지도 실패 v3: ' + e.message;
-  document.getElementById('msg').style.background = '#fecaca';
+
+function showMsg(text, color){
+  var m=document.getElementById('msg');
+  m.textContent=text;
+  m.style.background=color;
 }
+
+// file:// 로 열면 카카오는 절대 안 뜸 - 바로 알려주기
+if (location.protocol === 'file:') {
+  showMsg('이 파일은 바탕화면에서 열면 안 돼요. 깃허브 주소 https://shoemaker9128-ai.github.io/ansimgil/ 로 열어주세요.', '#fecaca');
+} else if (typeof kakao === 'undefined' || !kakao.maps) {
+  showMsg('카카오 SDK가 안 왔어요. 잠시 뒤 https 주소로 다시 열어보세요.', '#fecaca');
+} else {
+  kakao.maps.load(function(){
+    var container = document.getElementById('map');
+    var options = { center: new kakao.maps.LatLng(37.5665,126.9780), level: 5 };
+    map = new kakao.maps.Map(container, options);
+    showMsg('카카오 지도로 열렸어요. 지도 아무 데나 찍어보세요.', '#dcfce7');
+    kakao.maps.event.addListener(map, 'click', function(e){ onMapClick(e.latLng.getLat(), e.latLng.getLng()); });
+  });
+}
+
 function onLocToggle(){
   var on=document.getElementById('useLoc').checked; if(!on) return;
   if(!navigator.geolocation){ alert('위치 지원 안 함'); document.getElementById('useLoc').checked=false; return; }
   navigator.geolocation.getCurrentPosition(function(p){ A={lat:p.coords.latitude,lng:p.coords.longitude,label:'내 위치'}; setPin('A',A.lat,A.lng); document.getElementById('step').textContent='내 위치를 출발지로 했어요. 이제 목적지를 찍으세요.'; if(B) findRoute(); },function(){ alert('위치 권한 허용 필요'); document.getElementById('useLoc').checked=false; });
 }
 function onMapClick(lat,lng){
+  if(!map) return;
   if(!A){ A={lat:lat,lng:lng,label:'지도 선택'}; setPin('A',lat,lng); document.getElementById('step').textContent='출발지 찍었어요. 이제 목적지를 찍으세요.'; }
   else if(!B){ B={lat:lat,lng:lng,label:'지도 선택'}; setPin('B',lat,lng); document.getElementById('step').textContent='목적지 찍었어요. 안심루트 찾는 중…'; findRoute(); }
   else { B={lat:lat,lng:lng,label:'지도 선택'}; setPin('B',lat,lng); findRoute(); }
@@ -115,8 +123,4 @@ function renderLayers(){
 function toggleLayer(){ var p=document.getElementById('layerPanel'); p.style.display=p.style.display==='block'?'none':'block'; renderLayers(); }
 function loadMemos(){ var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map(function(m,i){ return '<div class="memo"><b>'+m.date+'</b><br>'+m.text+' <button onclick="delMemo('+i+')" style="float:right">삭제</button></div>'}).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
 function addMemo(){ var t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.unshift({text:t,date:new Date().toLocaleString()}); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); document.getElementById('memoText').value=''; loadMemos(); }
-function delMemo(i){ var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); loadMemos(); }
-renderLayers(); loadMemos();
-</script>
-</body>
-</html>
+function delMemo(i){ var arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos
