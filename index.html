@@ -10,8 +10,7 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 .mapWrap{flex:1.55;min-width:0;background:#e8eaf6;overflow:hidden;position:relative}
 #map{width:100%;height:100%;min-height:100%;background:#e8eaf6;display:block}
 .panel{flex:1;min-width:340px;max-width:520px;background:#f7fdf8;border-left:1px solid #e5e7eb;padding:4px 12px 14px;overflow-y:auto;height:100%}
-.safeBadge{display:inline-flex;align-items:center;gap:5px;background:#dcfce7;border:1px solid #bbf7d0;color:#166534;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px}
-.titleWrap{display:flex;align-items:center;gap:8px;margin:4px 0 2px;padding:6px 10px;background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 100%);border:1px solid #d1fae5;border-radius:12px}
+.titleWrap{display:flex;align-items:center;gap:8px;margin:4px 0 0;padding:6px 10px;background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 100%);border:1px solid #d1fae5;border-radius:12px}
 .titleIcon{width:28px;height:28px;flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:16px;background:#166534;border-radius:8px;box-shadow:0 2px 6px rgba(22,101,52,.25)}
 .titleWrap h2{margin:0;font-size:16px;line-height:1.2;font-weight:900;letter-spacing:-.5px;color:#14532d}
 .titleWrap h2 span{color:#166534}
@@ -35,6 +34,7 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 #mode-walk.active{background:#fff7ed;border-color:#ea580c;color:#9a3412;box-shadow:0 0 0 2px #ffedd5}
 #mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
 #mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
+.modeRow{margin-top:6px;padding:0}
 .loc-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;color:#166534;cursor:pointer;white-space:nowrap;user-select:none;line-height:1}.loc-pill input{-webkit-appearance:none;appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;cursor:pointer;border:1.5px solid #16a34a;border-radius:4px;background:#fff;display:inline-grid;place-content:center}.loc-pill input:checked{background:#166534;border-color:#166534}.loc-pill input:checked::after{content:"✓";color:#fff;font-size:11px;font-weight:900;line-height:1}.loc-pill:has(input:checked){background:#166534;color:#fff;border-color:#166534}.loc-pill:has(input:checked) input{border-color:#fff;background:#fff}.loc-pill:has(input:checked) input:checked::after{color:#166534}
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:8px 10px;font-size:12px;line-height:1.6}.small{font-size:11px;color:#666}
 #layerPanel{display:none;position:fixed;right:10px;top:58px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:12px}
@@ -50,6 +50,8 @@ h3{font-weight:800;letter-spacing:-.3px;font-size:14px}
 <div class="layout">
 <div class="mapWrap"><div id="map"></div></div>
 <div class="panel">
+<div class="titleWrap"><div class="titleIcon">🛡️</div><div><h2>우리동네<span>안심길</span></h2><p>안전한 길로, 마음 편히 걸어요</p></div></div>
+<div class="row modeRow"><button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><label class="loc-pill"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 내 위치</label></div>
 <div class="searchLabel"><span class="dot dot-a"></span> 출발</div>
 <div class="searchBox"><input id="fromSearch" type="text" placeholder="출발 검색" onkeydown="if(event.key==='Enter') searchPlace('A')"><button onclick="searchPlace('A')">찾기</button></div>
 <div id="fromResults" class="searchRes"></div>
@@ -58,8 +60,6 @@ h3{font-weight:800;letter-spacing:-.3px;font-size:14px}
 <div class="searchBox"><input id="toSearch" type="text" placeholder="도착 검색" onkeydown="if(event.key==='Enter') searchPlace('B')"><button onclick="searchPlace('B')">찾기</button></div>
 <div id="toResults" class="searchRes"></div>
 <div class="confirmRow"><button class="confirmBtn" onclick="confirmRoute()">확인</button><button class="resetBtn" onclick="resetRoute()">루트 초기화</button></div>
-<div class="row"><button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><label class="loc-pill"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 내 위치</label></div>
-<div class="titleWrap"><div class="titleIcon">🛡️</div><div><h2>우리동네<span>안심길</span></h2><p>안전한 길로, 마음 편히 걸어요</p></div></div>
 <div class="card" id="routeInfo">—</div>
 <div class="score" id="safetyBox" style="display:none"><b id="safetyScore">안전 점수 0점</b> <span id="safetyGrade"></span><div class="bar"><div id="safetyBar" style="width:0%"></div></div><div id="safetyFac">✅ 안전시설 0개 +0점</div><div id="safetyDanger">⚠️ 위험지역 0개 -0점</div><div id="safetyDetail">🚶 인도: 확인됨 · 🔶 횡단보도: 확인됨</div></div>
 <div class="memoRow"><input id="memoText" type="text" placeholder="메모"><button onclick="saveRoute()">루트 저장</button></div>
