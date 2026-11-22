@@ -1,15 +1,16 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>동네안심길 - ansimgil</title>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&libraries=services&autoload=false"></script>
-<style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#f4f6f8}
-header{min-height:52px;background:#fff;display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #e5e7eb;flex-wrap:wrap}header b{white-space:nowrap}
-#msg{background:#fef3c7;padding:8px 12px;font-size:13px}
-#map{height:520px;background:#e8eaf6}
-.panel{padding:0;background:#fff;max-width:1100px;margin:0 auto;border-radius:18px 18px 0 0;margin-top:-14px;position:relative;z-index:5;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
-.kakao-head{background:#1e6bff;color:#fff;padding:12px 16px 10px;border-radius:18px 18px 0 0}
-.kakao-tabs{display:flex;gap:18px;font-size:15px;font-weight:700}.kakao-tabs span{opacity:.7;padding:4px 6px}.kakao-tabs span.on{opacity:1;background:rgba(0,0,0,.18);border-radius:8px}
-.searchBox{display:flex;gap:8px;background:#fff;border-radius:10px;padding:8px 10px;margin-top:10px}.searchBox input{flex:1;border:0;outline:none;font-size:15px}.searchBox button{border:0;background:#fff;font-size:18px;cursor:pointer}
-.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:12px 16px}button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap}button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
+<style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#f1f3f5;color:#1a1a1a}
+header{min-height:54px;background:#fff;display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #e5e7eb}header b{font-size:18px}header .ver{font-size:12px;color:#888}
+#msg{background:#fef3c7;padding:8px 16px;font-size:13px}
+.layout{display:flex;align-items:stretch;min-height:calc(100vh - 54px - 33px)}
+.mapWrap{flex:1.55;min-width:0;position:relative;background:#e8eaf6}
+#map{width:100%;height:100%;min-height:560px;background:#e8eaf6}
+.panel{flex:1;min-width:360px;max-width:520px;background:#fff;border-left:1px solid #e5e7eb;overflow-y:auto;padding:18px 18px 24px}
+h2{margin:4px 0 4px;font-size:20px} .sub{font-size:13px;color:#666;line-height:1.6;margin:0 0 14px}
+.searchBox{display:flex;gap:8px;border:1.5px solid #1a1a1a;border-radius:12px;padding:8px 10px;background:#fff}.searchBox input{flex:1;border:0;outline:none;font-size:15px}.searchBox button{border:0;background:#1a1a1a;color:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:12px 0}button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap}button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
 .mode-btn{min-width:68px;font-size:13px;font-weight:700;padding:7px 10px;line-height:1.2;border-width:2px}.mode-btn .ico{font-size:22px;display:block;line-height:1;margin-bottom:2px}
 #mode-walk{border-color:#fdba74;color:#9a3412}#mode-walk .ico{color:#ea580c}
 #mode-bike{border-color:#6ee7b7;color:#065f46}#mode-bike .ico{color:#059669}
@@ -18,32 +19,37 @@ header{min-height:52px;background:#fff;display:flex;align-items:center;gap:10px;
 #mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
 #mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
 .loc-right{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap}
-input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}.card{margin:0 16px 8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px;line-height:1.5}.small{font-size:12px;color:#666}
+input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}.card{background:#f8fafc;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.6}.small{font-size:12px;color:#666}
 #layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 #layerPanel label{display:inline-block;margin:3px 6px 3px 0;font-size:13px;background:#f8fafc;border:1px solid #eee;border-radius:999px;padding:5px 9px}
-.saved{border:1px solid #dbeafe;background:#eff6ff;border-radius:10px;padding:10px 12px;font-size:13px;margin:0 16px 8px;line-height:1.6}.saved .memoTxt{font-weight:700}
-.score{margin:0 16px 8px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.8}.score b{font-size:16px}.score .bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:6px 0}.score .bar div{height:100%;background:#059669}
-.near{display:flex;gap:10px;overflow-x:auto;padding:4px 16px 12px}.near button{border:0;background:#f8fafc;min-width:56px;padding:8px 4px;border-radius:12px;font-size:12px}.near button i{display:block;font-size:20px;font-style:normal;margin-bottom:4px}
-.myplace{padding:0 16px 12px;font-size:13px;line-height:2}.myplace b{font-size:14px}
-.searchRes{padding:0 16px 10px}.searchRes div{padding:8px;border:1px solid #eee;border-radius:10px;margin-bottom:6px;font-size:13px;cursor:pointer}
+.saved{border:1px solid #dbeafe;background:#eff6ff;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:8px;line-height:1.6}.saved .memoTxt{font-weight:700}
+.score{margin:10px 0;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.8}.score b{font-size:16px}.score .bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:6px 0}.score .bar div{height:100%;background:#059669}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.chips button{border:1px solid #e5e7eb;background:#fafafa;border-radius:999px;padding:7px 12px;font-size:13px}
+.myplace{padding:10px 0;font-size:13px;line-height:2;border-top:1px dashed #e5e7eb;border-bottom:1px dashed #e5e7eb}.myplace b{font-size:14px}
+.searchRes{padding:8px 0}.searchRes div{padding:9px;border:1px solid #eee;border-radius:10px;margin-bottom:6px;font-size:13px;cursor:pointer}
+.sectionTitle{font-size:14px;font-weight:800;margin:16px 0 6px}
+@media(max-width:820px){.layout{flex-direction:column}.panel{max-width:none;min-width:0;border-left:0;border-top:1px solid #e5e7eb}#map{min-height:420px;height:420px}}
 </style></head><body>
-<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 · ansimgil v4-카카오하단</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어 접기/펼치기</button></header>
+<header><b>동네안심길</b><span class="ver">카카오맵 · ansimgil v5-지도왼쪽</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어 접기/펼치기</button></header>
 <div id="msg">카카오 지도 불러오는 중…</div>
-<div id="map"></div>
-<div id="layerPanel"><b>안전 레이어</b><div style="margin:6px 0"><label style="background:#fff"><input type="checkbox" id="showLayersChk" onchange="toggleShowLayers()"> 지도에 레이어 보이기 (기본 숨김)</label></div><div class="small" style="line-height:1.6;margin:6px 0">체크한 항목을 지도에 표시해요.<br>위험지역이 보이면 그 길은 피하고, 안전시설이 보이면 그 길로 가요.</div><div id="layers"></div><div id="wmsStatus" class="small" style="margin-top:8px"></div></div>
+<div class="layout">
+<div class="mapWrap"><div id="map"></div></div>
 <div class="panel">
-<div class="kakao-head"><div class="kakao-tabs"><span class="on">검색</span><span>길찾기</span><span>버스</span><span>지하철</span><span>MY</span></div><div class="searchBox"><input id="placeSearch" type="text" placeholder="장소 검색 (예: 홍대입구역, 초등학교)" onkeydown="if(event.key==='Enter') searchPlace()"><button onclick="searchPlace()">🔍</button></div></div>
-<div class="row" style="padding-bottom:0"><span class="small" id="step">1단계: 지도에서 출발을 찍으세요</span><span class="small" style="margin-left:8px">· 검색 결과 클릭 → 출발 / 도착 선택</span></div>
+<h2>어디로 갈까요?</h2><p class="sub">지도에서 찍거나, 아래에서 장소를 찾아 출발 / 도착을 정하세요.</p>
+<div class="searchBox"><input id="placeSearch" type="text" placeholder="장소 검색 (예: 홍대입구역, 초등학교)" onkeydown="if(event.key==='Enter') searchPlace()"><button onclick="searchPlace()">찾기</button></div>
+<div class="row" style="padding-bottom:0"><span class="small" id="step">1단계: 지도에서 출발을 찍으세요</span></div>
 <div id="searchResults" class="searchRes"></div>
-<div style="padding:8px 16px 0"><b style="font-size:14px">주변 탐색</b></div>
-<div class="near"><button onclick="quickSearch('음식점')"><i>🍽️</i>음식점</button><button onclick="quickSearch('카페')"><i>☕</i>카페</button><button onclick="quickSearch('버스정류장')"><i>🚌</i>버스</button><button onclick="quickSearch('지하철역')"><i>🚇</i>지하철</button><button onclick="quickSearch('숙박')"><i>🏨</i>숙박</button><button onclick="quickSearch('은행')"><i>🏦</i>은행</button><button onclick="quickSearch('편의점')"><i>🏪</i>편의점</button></div>
-<div class="myplace"><b>내 장소 ›</b><br>🏠 집 &nbsp;·&nbsp; 🏢 회사<br><span class="small">자주 가는 장소를 검색해서 루트로 저장해두세요.</span></div>
+<div class="sectionTitle">근처에서 찾기</div>
+<div class="chips"><button onclick="quickSearch('음식점')">음식점</button><button onclick="quickSearch('카페')">카페</button><button onclick="quickSearch('버스정류장')">버스정류장</button><button onclick="quickSearch('지하철역')">지하철역</button><button onclick="quickSearch('편의점')">편의점</button><button onclick="quickSearch('은행')">은행</button><button onclick="quickSearch('숙박')">숙박</button></div>
+<div class="myplace"><b>자주 가는 곳</b><br>🏠 집 &nbsp;·&nbsp; 🏢 회사<br><span class="small">자주 가는 곳을 검색해서 루트로 저장해두세요.</span></div>
 <div class="row"><button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><button onclick="swapAB()">출발↔도착 바꾸기</button><button onclick="resetRoute()" style="background:#fee2e2">루트 초기화</button><label class="loc-right"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 📍 내 위치를 출발로 연결</label></div>
 <div class="card" id="routeInfo">아직 루트가 없어요. 출발과 도착을 찍으면 안심루트를 찾아요.</div>
 <div class="score" id="safetyBox" style="display:none"><b id="safetyScore">안전 점수 0점</b> <span id="safetyGrade"></span><div class="bar"><div id="safetyBar" style="width:0%"></div></div><div id="safetyFac">✅ 안전시설 0개 +0점</div><div id="safetyDanger">⚠️ 위험지역 0개 -0점</div><div id="safetyDetail">🚶 인도: 확인됨 · 🔶 횡단보도: 확인됨</div></div>
 <div class="row"><input id="memoText" type="text" placeholder="이 루트에 남길 메모 (예: 아이 등하교 길)"><button onclick="saveRoute()" style="background:#0b2f6b;color:#fff;border-color:#0b2f6b">루트 저장</button></div>
-<h3 style="margin:8px 16px 8px;font-size:15px">저장한 루트</h3><div id="savedList" style="padding-bottom:16px"><div class="small" style="padding:0 16px">아직 저장한 루트가 없어요.</div></div>
+<h3 style="margin:12px 0 8px;font-size:15px">저장한 루트</h3><div id="savedList"><div class="small">아직 저장한 루트가 없어요.</div></div>
 </div>
+</div>
+<div id="layerPanel"><b>안전 레이어</b><div style="margin:6px 0"><label style="background:#fff"><input type="checkbox" id="showLayersChk" onchange="toggleShowLayers()"> 지도에 레이어 보이기 (기본 숨김)</label></div><div class="small" style="line-height:1.6;margin:6px 0">체크한 항목을 지도에 표시해요.<br>위험지역이 보이면 그 길은 피하고, 안전시설이 보이면 그 길로 가요.</div><div id="layers"></div><div id="wmsStatus" class="small" style="margin-top:8px"></div></div>
 <script>
 const LAYERS=[
  {cat:'치안안전',name:'범죄주의구간(전체)',code:'IF_0087'},{cat:'치안안전',name:'어린이대상범죄주의구간',code:'IF_0081'},{cat:'치안안전',name:'노인대상범죄주의구간',code:'IF_0082'},{cat:'치안안전',name:'여성밤길치안안전 - 전체',code:'IF_0080'},{cat:'치안안전',name:'치안사고통계(전체)',code:'IF_0075'},{cat:'치안안전',name:'치안시설',code:'IF_0036'},{cat:'치안안전',name:'아동안전지킴이집',code:'IF_0055'},
@@ -81,7 +87,7 @@ function showMsg(t,c){var m=document.getElementById('msg');m.textContent=t;m.sty
 if(typeof kakao==='undefined'){ showMsg('카카오 SDK가 안 불러와졌어요','#fecaca'); }
 else{
   kakao.maps.load(function(){
-    try{ map=new kakao.maps.Map(document.getElementById('map'),{center:new kakao.maps.LatLng(37.5665,126.9780),level:5}); showMsg('카카오 지도 열렸어요 v4-카카오하단','#dcfce7'); kakao.maps.event.addListener(map,'click',function(e){onMapClick(e.latLng.getLat(),e.latLng.getLng());}); }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); return; }
+    try{ map=new kakao.maps.Map(document.getElementById('map'),{center:new kakao.maps.LatLng(37.5665,126.9780),level:5}); showMsg('카카오 지도 열렸어요 v5-지도왼쪽','#dcfce7'); kakao.maps.event.addListener(map,'click',function(e){onMapClick(e.latLng.getLat(),e.latLng.getLng());}); setTimeout(function(){ if(map) map.relayout(); },300); }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); return; }
     try{ renderLayers(); loadSaved(); if(window.kakao.maps.services) placesService=new kakao.maps.services.Places(); }catch(e){}
     try{ placeAllLayersOnMap(); }catch(e){}
     try{ var _t=null; kakao.maps.event.addListener(map,'bounds_changed',function(){ clearTimeout(_t); _t=setTimeout(function(){ try{ placeAllLayersOnMap(); }catch(e){} },800); }); }catch(e){}
@@ -145,63 +151,4 @@ function showSafety(best){
     if(on['IF_0093']){danCount++; danMinus+=6;}
     if(on['IF_0094']){danCount++; danMinus+=5;}
     if(on['IF_0103']){danCount++; danMinus+=4;}
-    ['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'].forEach(function(c){ if(on[c]){danCount++; danMinus+=2;} });
-  } else {
-    if(on['IF_0093']){danCount++; danMinus+=6;}
-    if(on['IF_0094']){danCount++; danMinus+=6;}
-    if(on['IF_0103']){danCount++; danMinus+=5;}
-    if(on['IF_0096']){facCount++; facPlus+=3;}
-    ['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'].forEach(function(c){ if(on[c]){danCount++; danMinus+=2;} });
-    ['IF_0036','IF_0032','IF_0131','IF_0102','IF_0055','IF_0053','IF_0095','IF_0097','IF_0098','IF_0101'].forEach(function(c){ if(on[c]){facCount++; facPlus+=1;} });
-  }
-  var hour=new Date().getHours();var isNight=hour>=20||hour<6;
-  var score=75 + facPlus - danMinus;
-  if(best.distance>3000) score-=4;
-  if(best.distance>8000) score-=4;
-  if(isNight) score-=6;
-  if(score>98) score=98; if(score<40) score=40; lastScore=score;
-  var grade=score>=90?'매우 안전':score>=80?'안전':score>=70?'보통':'주의 필요';
-  document.getElementById('safetyBox').style.display='block';
-  document.getElementById('safetyScore').textContent='안전 점수 '+score+'점';
-  document.getElementById('safetyGrade').textContent='· '+grade;
-  document.getElementById('safetyBar').style.width=score+'%';
-  document.getElementById('safetyFac').textContent='✅ 안전시설 '+facCount+'개 +'+facPlus+'점';
-  document.getElementById('safetyDanger').textContent='⚠️ 위험지역 '+danCount+'개 -'+danMinus+'점';
-  var walkTxt = mode==='walk' ? '🚶 인도: '+(on['IF_0095']?'확인됨':'없음')+' · 🔶 횡단보도: '+(on['IF_0097']?'확인됨':'없음')+' · 스쿨존: '+(on['IF_0098']?'확인됨':'없음') : mode==='bike' ? '🚲 자전거길: '+(on['IF_0101']?'확인됨':'없음')+' · 🚶 인도: '+(on['IF_0095']?'확인됨':'없음')+' · 🔶 횡단보도: '+(on['IF_0097']?'확인됨':'없음') : '🚗 가드레일: '+(on['IF_0096']?'확인됨':'없음')+' · 결빙구간: '+(on['IF_0103']?'주의':'없음')+' · 교통사고다발: '+(on['IF_0093']?'주의':'없음');
-  document.getElementById('safetyDetail').textContent=walkTxt;
-  if(lastRoute)lastRoute.score=score;
-}
-function setMode(m){mode=m;document.querySelectorAll('[id^=mode-]').forEach(function(b){b.classList.remove('active')});document.getElementById('mode-'+m).classList.add('active');if(A&&B)findRoute();}
-function clearAll(){A=B=null;lastRoute=null;lastScore=null;pendingRouteColor=null;Object.values(markers).forEach(function(x){x.setMap(null)});markers={};if(routeLine)routeLine.setMap(null);document.getElementById('step').textContent='1단계: 지도에서 출발을 찍으세요';document.getElementById('routeInfo').textContent='아직 루트가 없어요.';document.getElementById('safetyBox').style.display='none';document.getElementById('useLoc').checked=false;}
-function resetRoute(){clearAll();showMsg('카카오 지도 열렸어요 v4-카카오하단','#dcfce7');}
-function swapAB(){var t=A;A=B;B=t;if(A)setPin('출발',A.lat,A.lng);if(B)setPin('도착',B.lat,B.lng);if(A&&B)findRoute();}
-function renderLayers(){var el=document.getElementById('layers');el.innerHTML=LAYERS.map(function(x){return '<label><input type="checkbox" checked onchange="placeAllLayersOnMap(); if(A&&B) findRoute()"> '+x.name+' <span class="small">'+x.code+'</span></label>'}).join('');}
-function toggleLayer(){var p=document.getElementById('layerPanel');p.style.display=p.style.display==='none'?'block':'none';}
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function saveRoute(){
-  if(!A||!B||!lastRoute) return alert('먼저 출발과 도착을 찍어 루트를 만드세요.');
-  if(lastScore!=null) lastRoute.score=lastScore;
-  var memo=document.getElementById('memoText').value.trim();
-  var arr=JSON.parse(localStorage.getItem('ansimgil_routes')||'[]');
-  var color=ROUTE_COLORS[arr.length % ROUTE_COLORS.length];
-  lastRoute.color=color;
-  lastRoute.memo=memo;
-  if(routeLine){ try{ routeLine.setOptions({strokeColor:color}); }catch(e){} }
-  arr.unshift(lastRoute);
-  localStorage.setItem('ansimgil_routes',JSON.stringify(arr));
-  document.getElementById('memoText').value='';
-  loadSaved();
-  alert(memo ? '루트 + 메모 저장했어요!' : '루트 저장했어요!');
-}
-function loadSaved(){
-  var arr=JSON.parse(localStorage.getItem('ansimgil_routes')||'[]');
-  document.getElementById('savedList').innerHTML=arr.map(function(r,i){
-    var dot=r.color||ROUTE_COLORS[i % ROUTE_COLORS.length];
-    var modeTxt=r.mode==='walk'?'도보':r.mode==='bike'?'자전거':'차량';
-    var memoTxt=r.memo ? '<div class="memoTxt">📝 '+esc(r.memo)+'</div>' : '<div class="small">메모 없음</div>';
-    return '<div class="saved"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+dot+';margin-right:4px"></span><b>'+r.at+'</b> · '+modeTxt+' · '+(r.distance/1000).toFixed(2)+'km · 약 '+Math.round(r.duration/60)+'분'+(r.score!=null?' · 안전 '+r.score+'점':'')+'<br>'+memoTxt+'<span class="small">📍 클릭하면 지도에 다시 보여요</span><br><button onclick="loadRoute('+i+')">불러오기</button> <button onclick="delRoute('+i+')">삭제</button></div>';
-  }).join('')||'<div class="small" style="padding:0 16px">아직 저장한 루트가 없어요.</div>';
-}
-function loadRoute(i){var arr=JSON.parse(localStorage.getItem('ansimgil_routes')||'[]');var r=arr[i];if(!r)return;pendingRouteColor=r.color||ROUTE_COLORS[i % ROUTE_COLORS.length];A=r.A;B=r.B;mode=r.mode;setMode(mode);setPin('출발',A.lat,A.lng);setPin('도착',B.lat,B.lng);findRoute();}
-function delRoute(i){var arr=JSON.parse(localStorage.getItem('ansimgil_routes')||'[]');arr.splice(i,1);localStorage.setItem('ansimgil_routes',JSON.stringify(arr));loadSaved();}
-</script></body></html>
+    ['IF_0087','IF_0081','IF_0082','IF_0080','
