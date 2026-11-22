@@ -166,4 +166,17 @@ function toggleWMS(idx,on){
     layer.on('tileerror',()=>{ if(dot) dot.className='dot fail'; });
     layer.on('load',()=>{ if(dot) dot.className='dot ok'; });
     layer.addTo(map); wmsLayers[idx]=layer;
-    setTimeout(()=>{ if(dot && dot.className
+    setTimeout(()=>{ if(dot && dot.className.includes('load')) dot.className='dot ok'; },4000);
+  }catch(e){ if(dot) dot.className='dot fail'; }
+}
+function checkAll(){ document.getElementById('checkResult').textContent='전체 확인: 레이어를 하나씩 켜면서 초록/빨강 상태를 확인하세요.'; LAYERS.forEach((_,i)=>{ const cb=document.querySelectorAll('#layers input')[i]; if(cb && !cb.checked){ cb.checked=true; toggleWMS(i,true); } }); }
+function toggleLayer(){ const p=document.getElementById('layerPanel'); p.style.display=p.style.display==='block'?'none':'block'; renderLayers(); }
+function toggleSet(){
+  const key=prompt('serviceKey를 입력하세요 (현재 키를 바꾸려면 새 키 입력, 그대로 두려면 취소)', safemapKey);
+  if(key!==null && key.trim()){ safemapKey=key.trim(); localStorage.setItem('ansimgil_key',safemapKey); alert('키 저장했어요.'); }
+}
+function loadMemos(){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map((m,i)=>`<div class="memo"><b>${m.date}</b> · ${m.place||'위치 메모'}<br>${m.text} <button onclick="delMemo(${i})" style="float:right">삭제</button></div>`).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
+function addMemo(){ const t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.unshift({text:t,date:new Date().toLocaleString(),place: A?`A ${A.lat.toFixed(4)},${A.lng.toFixed(4)}` : B?`B ${B.lat.toFixed(4)},${B.lng.toFixed(4)}` : '지도'}); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); document.getElementById('memoText').value=''; loadMemos(); }
+function delMemo(i){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); loadMemos(); }
+renderLayers(); loadMemos();
+</script></body></html>
