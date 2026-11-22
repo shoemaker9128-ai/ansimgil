@@ -17,7 +17,7 @@ header{min-height:52px;background:#fff;display:flex;align-items:center;gap:10px;
 #mode-walk.active{background:#fff7ed;border-color:#ea580c;color:#9a3412;box-shadow:0 0 0 2px #ffedd5}
 #mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
 #mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
-.loc-right{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px}
+.loc-right{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap}
 input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}.card{margin:0 16px 8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px;line-height:1.5}.small{font-size:12px;color:#666}
 #layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 #layerPanel label{display:inline-block;margin:3px 6px 3px 0;font-size:13px;background:#f8fafc;border:1px solid #eee;border-radius:999px;padding:5px 9px}
@@ -27,9 +27,10 @@ input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;b
 .myplace{padding:0 16px 12px;font-size:13px;line-height:2}.myplace b{font-size:14px}
 .searchRes{padding:0 16px 10px}.searchRes div{padding:8px;border:1px solid #eee;border-radius:10px;margin-bottom:6px;font-size:13px;cursor:pointer}
 </style></head><body>
-<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 · ansimgil</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어 접기/펼치기</button></header>
+<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 · ansimgil v4-카카오하단</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어 접기/펼치기</button></header>
 <div id="msg">카카오 지도 불러오는 중…</div>
 <div id="map"></div>
+<div id="layerPanel"><b>안전 레이어</b><div style="margin:6px 0"><label style="background:#fff"><input type="checkbox" id="showLayersChk" onchange="toggleShowLayers()"> 지도에 레이어 보이기 (기본 숨김)</label></div><div class="small" style="line-height:1.6;margin:6px 0">체크한 항목을 지도에 표시해요.<br>위험지역이 보이면 그 길은 피하고, 안전시설이 보이면 그 길로 가요.</div><div id="layers"></div><div id="wmsStatus" class="small" style="margin-top:8px"></div></div>
 <div class="panel">
 <div class="kakao-head"><div class="kakao-tabs"><span class="on">검색</span><span>길찾기</span><span>버스</span><span>지하철</span><span>MY</span></div><div class="searchBox"><input id="placeSearch" type="text" placeholder="장소 검색 (예: 홍대입구역, 초등학교)" onkeydown="if(event.key==='Enter') searchPlace()"><button onclick="searchPlace()">🔍</button></div></div>
 <div class="row" style="padding-bottom:0"><span class="small" id="step">1단계: 지도에서 출발을 찍으세요</span><span class="small" style="margin-left:8px">· 검색 결과 클릭 → 출발 / 도착 선택</span></div>
@@ -80,7 +81,7 @@ function showMsg(t,c){var m=document.getElementById('msg');m.textContent=t;m.sty
 if(typeof kakao==='undefined'){ showMsg('카카오 SDK가 안 불러와졌어요','#fecaca'); }
 else{
   kakao.maps.load(function(){
-    try{ map=new kakao.maps.Map(document.getElementById('map'),{center:new kakao.maps.LatLng(37.5665,126.9780),level:5}); showMsg('카카오 지도 열렸어요 v3-894d','#dcfce7'); kakao.maps.event.addListener(map,'click',function(e){onMapClick(e.latLng.getLat(),e.latLng.getLng());}); }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); return; }
+    try{ map=new kakao.maps.Map(document.getElementById('map'),{center:new kakao.maps.LatLng(37.5665,126.9780),level:5}); showMsg('카카오 지도 열렸어요 v4-카카오하단','#dcfce7'); kakao.maps.event.addListener(map,'click',function(e){onMapClick(e.latLng.getLat(),e.latLng.getLng());}); }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); return; }
     try{ renderLayers(); loadSaved(); if(window.kakao.maps.services) placesService=new kakao.maps.services.Places(); }catch(e){}
     try{ placeAllLayersOnMap(); }catch(e){}
     try{ var _t=null; kakao.maps.event.addListener(map,'bounds_changed',function(){ clearTimeout(_t); _t=setTimeout(function(){ try{ placeAllLayersOnMap(); }catch(e){} },800); }); }catch(e){}
@@ -172,7 +173,7 @@ function showSafety(best){
 }
 function setMode(m){mode=m;document.querySelectorAll('[id^=mode-]').forEach(function(b){b.classList.remove('active')});document.getElementById('mode-'+m).classList.add('active');if(A&&B)findRoute();}
 function clearAll(){A=B=null;lastRoute=null;lastScore=null;pendingRouteColor=null;Object.values(markers).forEach(function(x){x.setMap(null)});markers={};if(routeLine)routeLine.setMap(null);document.getElementById('step').textContent='1단계: 지도에서 출발을 찍으세요';document.getElementById('routeInfo').textContent='아직 루트가 없어요.';document.getElementById('safetyBox').style.display='none';document.getElementById('useLoc').checked=false;}
-function resetRoute(){clearAll();showMsg('카카오 지도 열렸어요 v3-894d','#dcfce7');}
+function resetRoute(){clearAll();showMsg('카카오 지도 열렸어요 v4-카카오하단','#dcfce7');}
 function swapAB(){var t=A;A=B;B=t;if(A)setPin('출발',A.lat,A.lng);if(B)setPin('도착',B.lat,B.lng);if(A&&B)findRoute();}
 function renderLayers(){var el=document.getElementById('layers');el.innerHTML=LAYERS.map(function(x){return '<label><input type="checkbox" checked onchange="placeAllLayersOnMap(); if(A&&B) findRoute()"> '+x.name+' <span class="small">'+x.code+'</span></label>'}).join('');}
 function toggleLayer(){var p=document.getElementById('layerPanel');p.style.display=p.style.display==='none'?'block':'none';}
