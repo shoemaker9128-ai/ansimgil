@@ -1,19 +1,24 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>동네안심길 - ansimgil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&libraries=services&autoload=false"></script>
-<style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#eef7f0;color:#1a2e22}
-header{min-height:46px;background:#fff;display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid #d9e8dd}header b{font-size:17px}
+<style>*{box-sizing:border-box}body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#eef7f0;color:#1a2e22;-webkit-font-smoothing:antialiased}
+header{min-height:46px;background:#fff;display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid #d9e8dd}header b{font-size:17px;font-family:'Noto Sans KR',sans-serif}
 #msg{background:#fef3c7;padding:8px 16px;font-size:13px;display:none}
 .layout{display:flex;align-items:stretch;height:calc(100vh - 46px);min-height:560px}
 .mapWrap{flex:1.55;min-width:0;background:#e8eaf6;overflow:hidden;position:relative}
 #map{width:100%;height:100%;min-height:100%;background:#e8eaf6;display:block}
 .panel{flex:1;min-width:340px;max-width:520px;background:#f7fdf8;border-left:1px solid #d9e8dd;padding:12px 14px 16px;overflow-y:auto;height:100%}
 .safeBadge{display:inline-flex;align-items:center;gap:6px;background:#dcfce7;border:1px solid #bbf7d0;color:#166534;font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px}
-h2{margin:8px 0 8px;font-size:20px;line-height:1.3}h2 .shield{font-size:22px}
-.searchBox{display:flex;gap:8px;border:1.5px solid #b9d9c2;border-radius:12px;padding:7px 8px;background:#fff;box-shadow:0 2px 8px rgba(22,101,52,.06);margin-bottom:2px}.searchBox:focus-within{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}.searchBox input{flex:1;border:0;outline:none;font-size:14px;min-width:0}.searchBox button{border:0;background:#166534;color:#fff;border-radius:9px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap}
+.titleWrap{display:flex;align-items:center;gap:10px;margin:10px 0 8px;padding:10px 12px;background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 100%);border:1px solid #d1fae5;border-radius:14px}
+.titleIcon{width:42px;height:42px;flex:0 0 42px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#166534;border-radius:12px;box-shadow:0 4px 12px rgba(22,101,52,.25)}
+.titleWrap h2{margin:0;font-size:22px;line-height:1.2;font-weight:900;letter-spacing:-.5px;color:#14532d}
+.titleWrap h2 span{color:#166534}
+.titleWrap p{margin:2px 0 0;font-size:12px;font-weight:500;color:#4b5563;letter-spacing:-.2px}
+.searchBox{display:flex;gap:8px;border:1.5px solid #b9d9c2;border-radius:12px;padding:7px 8px;background:#fff;box-shadow:0 2px 8px rgba(22,101,52,.06);margin-bottom:2px}.searchBox:focus-within{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}.searchBox input{flex:1;border:0;outline:none;font-size:14px;min-width:0;font-family:'Noto Sans KR',sans-serif}.searchBox button{border:0;background:#166534;color:#fff;border-radius:9px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
 .searchLabel{font-size:13px;font-weight:800;margin:8px 0 3px;display:flex;align-items:center;gap:6px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}.dot-a{background:#16a34a}.dot-b{background:#dc2626}
 .swapWrap{display:flex;justify-content:center;margin:4px 0 1px;position:relative}.swapWrap:before{content:"";position:absolute;left:20px;right:20px;top:50%;height:1px;background:#d9e8dd;z-index:0}.swapBtn{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;border:2px solid #fff;background:#166534;color:#fff;font-size:16px;cursor:pointer;box-shadow:0 4px 12px rgba(22,101,52,.25);line-height:1}
-.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 0}button{border:1px solid #ddd;background:#fff;padding:7px 10px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap}button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 0}button{border:1px solid #ddd;background:#fff;padding:7px 10px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
 .confirmRow{display:flex;gap:8px;justify-content:flex-end;padding:8px 0 2px}
 .confirmBtn{border:0;background:#166534;color:#fff;border-radius:999px;padding:9px 18px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(22,101,52,.28)}
 .confirmBtn:active{transform:translateY(1px)}
@@ -27,7 +32,7 @@ h2{margin:8px 0 8px;font-size:20px;line-height:1.3}h2 .shield{font-size:22px}
 #mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
 #mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
 .loc-right{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap}
-input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}.card{background:#fff;border:1px solid #d9e8dd;border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.6}.small{font-size:12px;color:#666}
+input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px;font-family:'Noto Sans KR',sans-serif}.card{background:#fff;border:1px solid #d9e8dd;border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.6}.small{font-size:12px;color:#666}
 #layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 #layerPanel label{display:inline-block;margin:3px 6px 3px 0;font-size:13px;background:#f8fafc;border:1px solid #eee;border-radius:999px;padding:5px 9px}
 .saved{border:1px solid #dbeafe;background:#eff6ff;border-radius:10px;padding:8px 10px;font-size:13px;margin-bottom:8px;line-height:1.6}.saved .memoTxt{font-weight:700}
@@ -41,7 +46,7 @@ input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;b
 <div class="mapWrap"><div id="map"></div></div>
 <div class="panel">
 <span class="safeBadge">🛡️ 안전한 길만 안내해요</span>
-<h2><span class="shield">🛡️</span> 우리동네안심길</h2>
+<div class="titleWrap"><div class="titleIcon">🛡️</div><div><h2>우리동네<span>안심길</span></h2><p>안전한 길로, 마음 편히 걸어요</p></div></div>
 <div class="searchLabel"><span class="dot dot-a"></span> 출발</div>
 <div class="searchBox"><input id="fromSearch" type="text" placeholder="출발 검색" onkeydown="if(event.key==='Enter') searchPlace('A')"><button onclick="searchPlace('A')">찾기</button></div>
 <div id="fromResults" class="searchRes"></div>
@@ -286,7 +291,7 @@ function saveRoute(){
   localStorage.setItem('ansimgil_routes',JSON.stringify(arr));
   document.getElementById('memoText').value='';
   loadSaved();
-  alert(memo ? '루트 + 메모 저장했어요!' : '루트 저장했어요!');
+  alert('루트 저장 완료');
 }
 function loadSaved(){
   var arr=JSON.parse(localStorage.getItem('ansimgil_routes')||'[]');
