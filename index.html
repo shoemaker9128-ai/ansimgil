@@ -3,21 +3,21 @@
 <title>동네안심길 - ansimgil</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#f4f6f8;color:#111}
-header{height:52px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:20}
+*{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#f4f6f8;color:#111;display:flex;flex-direction:column}
+header{height:52px;flex-shrink:0;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #e5e7eb}
 header b{font-size:18px} header span{font-size:12px;color:#666}
-#kakaoBanner{background:#fef3c7;padding:8px 12px;font-size:13px;line-height:1.5}
-#map{height:calc(100vh - 52px - 150px);min-height:380px;background:#dde}
-#mapError{display:none;margin:10px;background:#fff;border:2px solid #ef4444;border-radius:12px;padding:12px;font-size:13px;line-height:1.7}
-.panel{position:fixed;left:10px;bottom:10px;right:10px;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:12px;z-index:30;max-height:220px;overflow:auto}
+#kakaoBanner{flex-shrink:0;background:#fef3c7;padding:8px 12px;font-size:13px;line-height:1.5}
+#mapError{display:none;flex-shrink:0;margin:10px;background:#fff;border:2px solid #ef4444;border-radius:12px;padding:12px;font-size:13px;line-height:1.7}
+#map{flex:1;min-height:300px;background:#dde;z-index:1}
+.panel{flex-shrink:0;background:#fff;border-top:1px solid #e5e7eb;padding:10px 12px;max-height:38vh;overflow:auto}
+.panel.collapsed{max-height:52px;overflow:hidden}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center} button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px}
 button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}
 .card{margin-top:8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px;line-height:1.5}
 .small{font-size:12px;color:#666} .dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#bbb}
 .dot.ok{background:#16a34a}.dot.fail{background:#ef4444}.dot.load{background:#2563eb}
-#layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border-radius:14px;padding:12px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+#layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border-radius:14px;padding:12px;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 #memoList{margin-top:8px;display:grid;gap:6px} .memo{border:1px solid #eee;border-radius:10px;padding:8px;font-size:13px}
-@media(min-width:900px){ #map{height:calc(100vh - 52px)} .panel{width:430px;right:auto;max-height:320px} }
 </style></head>
 <body>
 <header><b>동네안심길</b><span>카카오맵 / 위치연결 / 메모 · ansimgil</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button><button onclick="toggleSet()">설정</button></header>
@@ -25,26 +25,27 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 <div id="mapError"></div>
 <div id="map"></div>
 
-<div class="panel">
+<div class="panel" id="bottomPanel">
 <div class="row">
 <label style="font-size:13px"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 📍 내 위치를 출발지로 연결</label>
 <button id="mode-walk" class="active" onclick="setMode('walk')">도보</button>
 <button id="mode-bike" onclick="setMode('bike')">자전거</button>
 <button id="mode-car" onclick="setMode('car')">차량</button>
 <button onclick="clearAll()">지우기</button><button onclick="swapAB()">A↔B</button>
+<button onclick="togglePanel()" style="margin-left:auto;background:#f1f5f9">⬆ 패널 접기 / 펼치기</button>
 </div>
 <div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발지를 찍으세요 (위치 체크하면 내 위치가 출발지가 돼요)</span></div>
 <div class="card" id="routeInfo">아직 루트가 없어요. 출발지(A)와 목적지(B)를 찍으면 안심루트를 찾아요.</div>
 <div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요. 예: 여기는 밤에 어두워요"><button onclick="addMemo()">메모 저장</button></div>
 <div id="memoList"></div>
-<div class="small" style="margin-top:6px">메모는 이 브라우저에만 저장돼요 (localStorage). 깃허브 Pages에서도 그대로 써요.</div>
+<div class="small" style="margin-top:6px">메모는 이 브라우저에만 저장돼요 (localStorage).</div>
 </div>
 
 <div id="layerPanel"><h3 style="margin:0 0 8px">레이어 <span class="small">체크하면 지도에 켜져요</span></h3><div id="layers"></div><button onclick="checkAll()" style="margin-top:10px;width:100%">전체 레이어 확인</button><div id="checkResult" class="small" style="margin-top:8px"></div></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const KAKAO_JS_KEY = "894d3481b0040f5f9b3de9972193f07d";
+const KAKAO_JS_KEY = "de4f0d3d59385d021ae8a9f2f9d8d89d";
 const SAFEMAP_KEY = "2NG9WDGV-2NG9-2NG9-2NG9-2NG9WDGVEW";
 let safemapKey = localStorage.getItem('ansimgil_key') || SAFEMAP_KEY;
 const LAYERS = [
@@ -73,7 +74,7 @@ let useKakao = !!(KAKAO_JS_KEY && !KAKAO_JS_KEY.includes('여기에'));
 let mapStarted=false, didFallback=false;
 function showKakaoError(){
   const e=document.getElementById('mapError'); e.style.display='block';
-  e.innerHTML='<b>카카오는 도메인 때문에 막혔어요. 지금은 일반 지도로 보여주고 있어요.</b><br>카카오로 바꾸려면: 카카오 개발자센터 > 내 애플리케이션 > 플랫폼 > Web > 사이트 도메인에 <b>https://shoemaker9128-ai.github.io</b> 를 <b>+ 버튼으로 추가 + 저장</b> 하고, 1~2분 뒤 새로고침하세요.';
+  e.innerHTML='<b>카카오는 도메인 때문에 막혔어요. 지금은 일반 지도로 보여주고 있어요.</b><br>새 키 de4f... 에 도메인을 등록했는지 확인하세요: 카카오 개발자센터 > JavaScript 키 > JavaScript SDK 도메인에 <b>https://shoemaker9128-ai.github.io</b> 를 <b>+ 버튼으로 추가 + 저장</b> 하고, 1~2분 뒤 새로고침하세요.';
 }
 function initLeaflet(){
   if(mapStarted) return; mapStarted=true; didFallback=true; useKakao=false;
@@ -99,16 +100,16 @@ function initKakao(){
   };
   s.onerror=()=>{ if(!didFallback){ showKakaoError(); initLeaflet(); } };
   document.head.appendChild(s);
-  // 3초 타임아웃: 카카오 인증이 막히면 무조건 OSM으로
   setTimeout(()=>{ if(!mapStarted && !didFallback){ showKakaoError(); initLeaflet(); } },3000);
 }
 window.addEventListener('error',e=>{
   const m=String(e.message||'')+String(e.filename||'');
-  if(m.includes('Kakao')||m.includes('kakao')||m.includes('AppKey')||m.includes('401')||m.includes('Unauthorized')){
+  if(m.includes('Kakao')||m.includes('kakao')||m.includes('AppKey')){
     if(!didFallback){ showKakaoError(); initLeaflet(); }
   }
 });
 if(useKakao) initKakao(); else initLeaflet();
+function togglePanel(){ const p=document.getElementById('bottomPanel'); p.classList.toggle('collapsed'); if(map && map.invalidateSize) setTimeout(()=>map.invalidateSize(),50); }
 function onLocToggle(){
   const on=document.getElementById('useLoc').checked;
   if(!on) return;
@@ -159,23 +160,10 @@ function toggleWMS(idx,on){
   if(!on){ if(wmsLayers[idx]){ if(useKakao&&window.kakao){} else map.removeLayer(wmsLayers[idx]); delete wmsLayers[idx]; } if(dot) dot.className='dot'; return; }
   if(!safemapKey){ alert('설정에서 serviceKey를 입력하세요.'); if(dot) dot.className='dot fail'; return; }
   if(dot) dot.className='dot load';
-  if(useKakao && window.kakao && map && map.getCenter){ if(dot) dot.className='dot fail'; alert('카카오맵에서는 WMS 레이어가 바로 안 붙어요. 카카오 키를 지우면 OSM으로 열려요.'); return; }
+  if(useKakao && window.kakao && map && map.getCenter){ if(dot) dot.className='dot fail'; alert('카카오맵에서는 WMS 레이어가 바로 안 붙어요.'); return; }
   try{
     const layer=L.tileLayer.wms(wmsUrl(x.code),{layers:x.code,format:'image/png',transparent:true,opacity:.75,version:'1.1.1'});
     layer.on('tileerror',()=>{ if(dot) dot.className='dot fail'; });
     layer.on('load',()=>{ if(dot) dot.className='dot ok'; });
     layer.addTo(map); wmsLayers[idx]=layer;
-    setTimeout(()=>{ if(dot && dot.className.includes('load')) dot.className='dot ok'; },4000);
-  }catch(e){ if(dot) dot.className='dot fail'; }
-}
-function checkAll(){ document.getElementById('checkResult').textContent='전체 확인: 레이어를 하나씩 켜면서 초록/빨강 상태를 확인하세요.'; LAYERS.forEach((_,i)=>{ const cb=document.querySelectorAll('#layers input')[i]; if(cb && !cb.checked){ cb.checked=true; toggleWMS(i,true); } }); }
-function toggleLayer(){ const p=document.getElementById('layerPanel'); p.style.display=p.style.display==='block'?'none':'block'; renderLayers(); }
-function toggleSet(){
-  const key=prompt('serviceKey를 입력하세요 (현재 키를 바꾸려면 새 키 입력, 그대로 두려면 취소)', safemapKey);
-  if(key!==null && key.trim()){ safemapKey=key.trim(); localStorage.setItem('ansimgil_key',safemapKey); alert('키 저장했어요.'); }
-}
-function loadMemos(){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map((m,i)=>`<div class="memo"><b>${m.date}</b> · ${m.place||'위치 메모'}<br>${m.text} <button onclick="delMemo(${i})" style="float:right">삭제</button></div>`).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
-function addMemo(){ const t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.unshift({text:t,date:new Date().toLocaleString(),place: A?`A ${A.lat.toFixed(4)},${A.lng.toFixed(4)}` : B?`B ${B.lat.toFixed(4)},${B.lng.toFixed(4)}` : '지도'}); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); document.getElementById('memoText').value=''; loadMemos(); }
-function delMemo(i){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); loadMemos(); }
-renderLayers(); loadMemos();
-</script></body></html>
+    setTimeout(()=>{ if(dot && dot.className
