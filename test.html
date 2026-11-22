@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{margin:0}
+#msg{background:#fef3c7;padding:8px 12px;font-size:13px}
+#map{width:100%;height:500px;background:#eee}
+</style>
+</head>
+<body>
+<div id="msg">지도 불러오는 중…</div>
+<div id="map"></div>
+
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&autoload=false"></script>
+<script>
+function startMap(){
+  kakao.maps.load(function(){
+    var container = document.getElementById('map');
+    var options = {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 5
+    };
+    var map = new kakao.maps.Map(container, options);
+    var msg = document.getElementById('msg');
+    msg.textContent = '지도 열림!';
+    msg.style.background = '#dcfce7';
+  });
+}
+
+if (typeof kakao !== 'undefined' && kakao.maps) {
+  startMap();
+} else {
+  document.getElementById('msg').textContent = 'SDK가 안 왔어요. 잠시 뒤 다시 열거나, SDK 주소를 직접 열어보세요.';
+  document.getElementById('msg').style.background = '#fecaca';
+}
+</script>
+</body>
+</html>
