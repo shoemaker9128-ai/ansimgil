@@ -6,13 +6,19 @@ header{min-height:52px;background:#fff;display:flex;align-items:center;gap:10px;
 #msg{background:#fef3c7;padding:8px 12px;font-size:13px}
 #map{height:520px;background:#e8eaf6}
 .panel{padding:14px 16px;background:#fff;max-width:1100px;margin:0 auto}.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap}button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b}
-.mode-btn{font-size:11px;padding:6px 8px;line-height:1.2}.mode-btn .ico{font-size:16px;display:block;line-height:1}
+.mode-btn{min-width:68px;font-size:13px;font-weight:700;padding:7px 10px;line-height:1.2;border-width:2px}.mode-btn .ico{font-size:22px;display:block;line-height:1;margin-bottom:2px}
+#mode-walk{border-color:#fdba74;color:#9a3412}#mode-walk .ico{color:#ea580c}
+#mode-bike{border-color:#6ee7b7;color:#065f46}#mode-bike .ico{color:#059669}
+#mode-car{border-color:#93c5fd;color:#1e3a8a}#mode-car .ico{color:#1d4ed8}
+#mode-walk.active{background:#fff7ed;border-color:#ea580c;color:#9a3412;box-shadow:0 0 0 2px #ffedd5}
+#mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
+#mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
 input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}.card{margin-top:8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px;line-height:1.5}.small{font-size:12px;color:#666}
 #layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 #layerPanel label{display:inline-block;margin:3px 6px 3px 0;font-size:13px;background:#f8fafc;border:1px solid #eee;border-radius:999px;padding:5px 9px}
 .memo{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #eee;border-radius:10px;padding:10px 12px;font-size:13px;margin-top:6px;background:#fff;overflow:hidden}.memo .txt{flex:1;min-width:0;word-break:break-all;line-height:1.5;cursor:pointer}.memo .txt.has-route:hover{background:#eff6ff}.memo button{float:none!important;position:static!important;flex-shrink:0;padding:6px 10px;font-size:12px}
 .saved{border:1px solid #dbeafe;background:#eff6ff;border-radius:10px;padding:8px;font-size:13px;margin-top:6px}
-.score{margin-top:8px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px;font-size:13px}</style></head><body>
+.score{margin-top:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.8}.score b{font-size:16px}.score .bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:6px 0}.score .bar div{height:100%;background:#059669}</style></head><body>
 <header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모 · ansimgil</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어 접기/펼치기</button></header>
 <div id="msg">카카오 지도 불러오는 중…</div>
 <div id="map"></div>
@@ -21,7 +27,7 @@ input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;b
 <button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><button onclick="swapAB()">출발↔도착 바꾸기</button><button onclick="resetRoute()" style="background:#fee2e2">루트 초기화</button><button class="primary" onclick="saveRoute()" style="background:#0b2f6b;color:#fff;border-color:#0b2f6b">루트 저장</button></div>
 <div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발을 찍으세요</span></div>
 <div class="card" id="routeInfo">아직 루트가 없어요. 출발과 도착을 찍으면 안심루트를 찾아요.</div>
-<div class="score" id="safetyBox" style="display:none"><span id="safetyScore">안전 점수 0점</span> <span class="small" id="safetyGrade"></span></div>
+<div class="score" id="safetyBox" style="display:none"><b id="safetyScore">안전 점수 0점</b> <span id="safetyGrade"></span><div class="bar"><div id="safetyBar" style="width:0%"></div></div><div id="safetyFac">✅ 안전시설 0개 +0점</div><div id="safetyDanger">⚠️ 위험지역 0개 -0점</div><div id="safetyDetail">🚶 인도: 확인됨 · 🔶 횡단보도: 확인됨</div></div>
 <div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요 (루트가 있으면 같이 저장돼요)"><button onclick="addMemo()">메모 저장</button></div><div id="memoList"></div>
 <h3 style="margin:16px 0 4px;font-size:15px">저장한 루트</h3><div id="savedList"><div class="small">아직 저장한 루트가 없어요.</div></div></div>
 <script>
@@ -70,30 +76,88 @@ else{
 function onLocToggle(){var on=document.getElementById('useLoc').checked;if(!on)return;if(!navigator.geolocation){alert('위치 지원 안 함');document.getElementById('useLoc').checked=false;return;}navigator.geolocation.getCurrentPosition(function(p){A={lat:p.coords.latitude,lng:p.coords.longitude};setPin('출발',A.lat,A.lng);document.getElementById('step').textContent='내 위치를 출발로 했어요. 이제 도착을 찍으세요.';if(B)findRoute();},function(){alert('위치 권한 허용 필요');document.getElementById('useLoc').checked=false;});}
 function onMapClick(lat,lng){if(!map)return;if(!A){A={lat:lat,lng:lng};setPin('출발',lat,lng);document.getElementById('step').textContent='출발 찍었어요. 이제 도착을 찍으세요.';}else if(!B){B={lat:lat,lng:lng};setPin('도착',lat,lng);document.getElementById('step').textContent='도착 찍었어요. 안심루트 찾는 중…';findRoute();}else{B={lat:lat,lng:lng};setPin('도착',lat,lng);findRoute();}}
 function setPin(which,lat,lng){if(markers[which])markers[which].setMap(null);markers[which]=new kakao.maps.Marker({position:new kakao.maps.LatLng(lat,lng),map:map});map.setCenter(new kakao.maps.LatLng(lat,lng));}
-async function findRoute(){if(!A||!B)return;var prof=mode==='walk'?'walking':mode==='bike'?'cycling':'driving';var url='https://router.project-osrm.org/route/v1/'+prof+'/'+A.lng+','+A.lat+';'+B.lng+','+B.lat+'?overview=full&geometries=geojson&alternatives=3';try{var r=await fetch(url);var j=await r.json();var best=(j.routes||[])[0];if(!best)throw new Error('no route');if(routeLine)routeLine.setMap(null);var path=best.geometry.coordinates.map(function(c){return new kakao.maps.LatLng(c[1],c[0]);});var lineColor=pendingRouteColor||'#0b2f6b';routeLine=new kakao.maps.Polyline({path:path,strokeWeight:6,strokeColor:lineColor,strokeOpacity:.9});routeLine.setMap(map);lastRoute={A:A,B:B,mode:mode,distance:best.distance,duration:best.duration,at:new Date().toLocaleString(),color:lineColor};pendingRouteColor=null;document.getElementById('routeInfo').innerHTML='<b>안심루트</b> · '+(mode==='walk'?'도보':mode==='bike'?'자전거':'차량')+' · 거리 '+(best.distance/1000).toFixed(2)+'km · 약 '+Math.round(best.duration/60)+'분<br><span class="small">출발 '+A.lat.toFixed(5)+','+A.lng.toFixed(5)+' → 도착 '+B.lat.toFixed(5)+','+B.lng.toFixed(5)+'</span>';showSafety(best);}catch(e){document.getElementById('routeInfo').textContent='경로를 불러오지 못했어요.';}}
-var DANGER_CODES=['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075','IF_0093','IF_0094','IF_0103'];
-var FACILITY_CODES=['IF_0036','IF_0055','IF_0032','IF_0131','IF_0102','IF_0053','IF_0096','IF_0095','IF_0097','IF_0098','IF_0101'];
+async function fetchOneRoute(prof){
+  var url='https://router.project-osrm.org/route/v1/'+prof+'/'+A.lng+','+A.lat+';'+B.lng+','+B.lat+'?overview=full&geometries=geojson&alternatives=1';
+  var r=await fetch(url); var j=await r.json(); return (j.routes||[])[0]||null;
+}
+async function findRoute(){
+  if(!A||!B)return;
+  var prof=mode==='walk'?'walking':mode==='bike'?'cycling':'driving';
+  try{
+    var best=await fetchOneRoute(prof);
+    if(!best) throw new Error('no route');
+    if(routeLine)routeLine.setMap(null);
+    var path=best.geometry.coordinates.map(function(c){return new kakao.maps.LatLng(c[1],c[0]);});
+    var lineColor=pendingRouteColor||'#0b2f6b';
+    routeLine=new kakao.maps.Polyline({path:path,strokeWeight:6,strokeColor:lineColor,strokeOpacity:.9});routeLine.setMap(map);
+    lastRoute={A:A,B:B,mode:mode,distance:best.distance,duration:best.duration,at:new Date().toLocaleString(),color:lineColor};pendingRouteColor=null;
+    document.getElementById('routeInfo').innerHTML='<b>안심루트</b> · '+(mode==='walk'?'도보':mode==='bike'?'자전거':'차량')+' · 거리 '+(best.distance/1000).toFixed(2)+'km · 약 '+Math.round(best.duration/60)+'분<br><span class="small">출발 '+A.lat.toFixed(5)+','+A.lng.toFixed(5)+' → 도착 '+B.lat.toFixed(5)+','+B.lng.toFixed(5)+'</span><br><span class="small" id="modeCompare">다른 모드 시간 비교 중…</span>';
+    showSafety(best);
+    // 1번: 시간 차이 비교 - 나머지 두 모드도 같이 조회
+    try{
+      var others = mode==='walk'?['cycling','driving']:mode==='bike'?['walking','driving']:['walking','cycling'];
+      var labels = {walking:'도보',cycling:'자전거',driving:'차량'};
+      var results={}; results[prof]=best;
+      for(var i=0;i<others.length;i++){ var rr=await fetchOneRoute(others[i]); if(rr) results[others[i]]=rr; }
+      var cmp='도보 '+(results.walking?Math.round(results.walking.duration/60)+'분':'-')+' · 자전거 '+(results.cycling?Math.round(results.cycling.duration/60)+'분':'-')+' · 차량 '+(results.driving?Math.round(results.driving.duration/60)+'분':'-');
+      var el=document.getElementById('modeCompare'); if(el) el.textContent='시간 비교: '+cmp;
+    }catch(e){}
+  }catch(e){document.getElementById('routeInfo').textContent='경로를 불러오지 못했어요.';}
+}
+function checkedCodes(){
+  var boxes=document.querySelectorAll('#layers input[type=checkbox]'); var s={};
+  LAYERS.forEach(function(L,i){ if(boxes[i] && boxes[i].checked) s[L.code]=true; });
+  return s;
+}
 function showSafety(best){
-  var boxes=document.querySelectorAll('#layers input[type=checkbox]');
-  var danger=0, facility=0;
-  LAYERS.forEach(function(L,i){
-    if(boxes[i] && boxes[i].checked){
-      if(DANGER_CODES.indexOf(L.code)>=0) danger++;
-      if(FACILITY_CODES.indexOf(L.code)>=0) facility++;
-    }
-  });
+  var on=checkedCodes();
+  var facPlus=0, danMinus=0, facCount=0, danCount=0;
+  // 3번: 모드별 가중치
+  if(mode==='walk'){
+    // 도보: 인도/횡단보도/스쿨존/비상벨/CCTV/보안등이 중요
+    var walkFac=['IF_0095','IF_0097','IF_0098','IF_0032','IF_0131','IF_0102','IF_0055','IF_0036'];
+    walkFac.forEach(function(c){ if(on[c]){facCount++; facPlus+=3;} });
+    if(on['IF_0101']){facCount++; facPlus+=1;}
+    if(on['IF_0053']){facCount++; facPlus+=2;}
+    if(on['IF_0096']){facCount++; facPlus+=1;}
+    var walkDan=['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'];
+    walkDan.forEach(function(c){ if(on[c]){danCount++; danMinus+=4;} });
+    if(on['IF_0093']){danCount++; danMinus+=3;}
+    if(on['IF_0094']){danCount++; danMinus+=2;}
+    if(on['IF_0103']){danCount++; danMinus+=2;}
+  } else if(mode==='bike'){
+    // 자전거: 자전거길이 제일 중요, 교통사고 위험을 크게 깎음
+    if(on['IF_0101']){facCount++; facPlus+=6;}
+    ['IF_0095','IF_0097','IF_0032','IF_0131','IF_0102'].forEach(function(c){ if(on[c]){facCount++; facPlus+=2;} });
+    ['IF_0036','IF_0055','IF_0053','IF_0096','IF_0098'].forEach(function(c){ if(on[c]){facCount++; facPlus+=1;} });
+    if(on['IF_0093']){danCount++; danMinus+=6;}
+    if(on['IF_0094']){danCount++; danMinus+=5;}
+    if(on['IF_0103']){danCount++; danMinus+=4;}
+    ['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'].forEach(function(c){ if(on[c]){danCount++; danMinus+=2;} });
+  } else {
+    // 차량: 교통사고/결빙/가드레일이 중요, 치안시설은 보조
+    if(on['IF_0093']){danCount++; danMinus+=6;}
+    if(on['IF_0094']){danCount++; danMinus+=6;}
+    if(on['IF_0103']){danCount++; danMinus+=5;}
+    if(on['IF_0096']){facCount++; facPlus+=3;}
+    ['IF_0087','IF_0081','IF_0082','IF_0080','IF_0075'].forEach(function(c){ if(on[c]){danCount++; danMinus+=2;} });
+    ['IF_0036','IF_0032','IF_0131','IF_0102','IF_0055','IF_0053','IF_0095','IF_0097','IF_0098','IF_0101'].forEach(function(c){ if(on[c]){facCount++; facPlus+=1;} });
+  }
   var hour=new Date().getHours();var isNight=hour>=20||hour<6;
-  var score=75 + (facility*2) - (danger*4);
+  var score=75 + facPlus - danMinus;
   if(best.distance>3000) score-=4;
   if(best.distance>8000) score-=4;
   if(isNight) score-=6;
-  if(mode==='walk') score+=2;
-  if(mode==='bike') score+=2;
   if(score>98) score=98; if(score<40) score=40; lastScore=score;
   var grade=score>=90?'매우 안전':score>=80?'안전':score>=70?'보통':'주의 필요';
   document.getElementById('safetyBox').style.display='block';
   document.getElementById('safetyScore').textContent='안전 점수 '+score+'점';
   document.getElementById('safetyGrade').textContent='· '+grade;
+  document.getElementById('safetyBar').style.width=score+'%';
+  document.getElementById('safetyFac').textContent='✅ 안전시설 '+facCount+'개 +'+facPlus+'점';
+  document.getElementById('safetyDanger').textContent='⚠️ 위험지역 '+danCount+'개 -'+danMinus+'점';
+  var walkTxt = mode==='walk' ? '🚶 인도: '+(on['IF_0095']?'확인됨':'없음')+' · 🔶 횡단보도: '+(on['IF_0097']?'확인됨':'없음')+' · 스쿨존: '+(on['IF_0098']?'확인됨':'없음') : mode==='bike' ? '🚲 자전거길: '+(on['IF_0101']?'확인됨':'없음')+' · 🚶 인도: '+(on['IF_0095']?'확인됨':'없음')+' · 🔶 횡단보도: '+(on['IF_0097']?'확인됨':'없음') : '🚗 가드레일: '+(on['IF_0096']?'확인됨':'없음')+' · 결빙구간: '+(on['IF_0103']?'주의':'없음')+' · 교통사고다발: '+(on['IF_0093']?'주의':'없음');
+  document.getElementById('safetyDetail').textContent=walkTxt;
   if(lastRoute)lastRoute.score=score;
 }
 function setMode(m){mode=m;document.querySelectorAll('[id^=mode-]').forEach(function(b){b.classList.remove('active')});document.getElementById('mode-'+m).classList.add('active');if(A&&B)findRoute();}
