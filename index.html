@@ -3,28 +3,26 @@
 <title>동네안심길 - ansimgil</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-*{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#f4f6f8;color:#111;display:flex;flex-direction:column}
+*{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#fff;color:#111;display:flex;flex-direction:column}
 header{height:52px;flex-shrink:0;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #e5e7eb}
-header b{font-size:18px} header span{font-size:12px;color:#666}
-#kakaoBanner{flex-shrink:0;background:#fef3c7;padding:8px 12px;font-size:13px;line-height:1.5}
-#mapError{display:none;flex-shrink:0;margin:10px;background:#fff;border:2px solid #ef4444;border-radius:12px;padding:12px;font-size:13px;line-height:1.7}
-#map{flex:1;min-height:300px;background:#dde;z-index:1}
+#kakaoBanner{flex-shrink:0;background:#fef3c7;padding:8px 12px;font-size:13px}
+#mapError{display:none;flex-shrink:0;margin:10px;background:#fff;border:2px solid #ef4444;border-radius:12px;padding:10px;font-size:13px;line-height:1.6}
+#map{flex:1;min-height:350px;background:#dde}
 .panel{flex-shrink:0;background:#fff;border-top:1px solid #e5e7eb;padding:10px 12px;max-height:38vh;overflow:auto}
 .panel.collapsed{max-height:52px;overflow:hidden}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center} button{border:1px solid #ddd;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer;font-size:13px}
 button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=text]{flex:1;min-width:140px;padding:9px 10px;border:1px solid #ddd;border-radius:10px}
 .card{margin-top:8px;background:#f8fafc;border-radius:10px;padding:9px 10px;font-size:13px;line-height:1.5}
 .small{font-size:12px;color:#666} .dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#bbb}
-.dot.ok{background:#16a34a}.dot.fail{background:#ef4444}.dot.load{background:#2563eb}
+.dot.ok{background:#16a34a}.dot.fail{background:#ef4444}
 #layerPanel{display:none;position:fixed;right:10px;top:62px;width:320px;max-width:92vw;max-height:80vh;overflow:auto;background:#fff;border-radius:14px;padding:12px;z-index:1000;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-#memoList{margin-top:8px;display:grid;gap:6px} .memo{border:1px solid #eee;border-radius:10px;padding:8px;font-size:13px}
+.memo{border:1px solid #eee;border-radius:10px;padding:8px;font-size:13px;margin-top:6px}
 </style></head>
 <body>
-<header><b>동네안심길</b><span>카카오맵 / 위치연결 / 메모 · ansimgil</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button><button onclick="toggleSet()">설정</button></header>
-<div id="kakaoBanner">지도 불러오는 중… 3초 안에 카카오가 안 뜨면 자동으로 일반 지도로 바꿔요.</div>
+<header><b>동네안심길</b><span style="font-size:12px;color:#666">카카오맵 / 위치연결 / 메모</span><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
+<div id="kakaoBanner">지도 여는 중…</div>
 <div id="mapError"></div>
 <div id="map"></div>
-
 <div class="panel" id="bottomPanel">
 <div class="row">
 <label style="font-size:13px"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 📍 내 위치를 출발지로 연결</label>
@@ -32,17 +30,14 @@ button.active{background:#0b2f6b;color:#fff;border-color:#0b2f6b} input[type=tex
 <button id="mode-bike" onclick="setMode('bike')">자전거</button>
 <button id="mode-car" onclick="setMode('car')">차량</button>
 <button onclick="clearAll()">지우기</button><button onclick="swapAB()">A↔B</button>
-<button onclick="togglePanel()" style="margin-left:auto;background:#f1f5f9">⬆ 패널 접기 / 펼치기</button>
+<button onclick="togglePanel()" style="margin-left:auto">⬆ 패널 접기 / 펼치기</button>
 </div>
-<div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발지를 찍으세요 (위치 체크하면 내 위치가 출발지가 돼요)</span></div>
+<div class="row" style="margin-top:8px"><span class="small" id="step">1단계: 지도에서 출발지를 찍으세요</span></div>
 <div class="card" id="routeInfo">아직 루트가 없어요. 출발지(A)와 목적지(B)를 찍으면 안심루트를 찾아요.</div>
-<div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요. 예: 여기는 밤에 어두워요"><button onclick="addMemo()">메모 저장</button></div>
+<div class="row" style="margin-top:8px"><input id="memoText" type="text" placeholder="메모를 적어보세요"><button onclick="addMemo()">메모 저장</button></div>
 <div id="memoList"></div>
-<div class="small" style="margin-top:6px">메모는 이 브라우저에만 저장돼요 (localStorage).</div>
 </div>
-
-<div id="layerPanel"><h3 style="margin:0 0 8px">레이어 <span class="small">체크하면 지도에 켜져요</span></h3><div id="layers"></div><button onclick="checkAll()" style="margin-top:10px;width:100%">전체 레이어 확인</button><div id="checkResult" class="small" style="margin-top:8px"></div></div>
-
+<div id="layerPanel"><h3 style="margin:0 0 8px">레이어</h3><div id="layers"></div><div id="checkResult" class="small" style="margin-top:8px"></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const KAKAO_JS_KEY = "de4f0d3d59385d021ae8a9f2f9d8d89d";
@@ -70,55 +65,39 @@ const LAYERS = [
     {cat:'교통안전',name:'자전거길',code:'IF_0101'},
 ];
 let map, markers={}, wmsLayers={}, routeLayer=null, A=null, B=null, mode='walk';
-let useKakao = !!(KAKAO_JS_KEY && !KAKAO_JS_KEY.includes('여기에'));
-let mapStarted=false, didFallback=false;
-function showKakaoError(){
-  const e=document.getElementById('mapError'); e.style.display='block';
-  e.innerHTML='<b>카카오는 도메인 때문에 막혔어요. 지금은 일반 지도로 보여주고 있어요.</b><br>새 키 de4f... 에 도메인을 등록했는지 확인하세요: 카카오 개발자센터 > JavaScript 키 > JavaScript SDK 도메인에 <b>https://shoemaker9128-ai.github.io</b> 를 <b>+ 버튼으로 추가 + 저장</b> 하고, 1~2분 뒤 새로고침하세요.';
-}
+let useKakao=false;
 function initLeaflet(){
-  if(mapStarted) return; mapStarted=true; didFallback=true; useKakao=false;
-  document.getElementById('kakaoBanner').textContent='일반 지도로 열렸어요. 카카오로 바꾸려면 위 빨간 박스를 확인하세요.';
+  document.getElementById('kakaoBanner').textContent='일반 지도로 열렸어요. 지도 아무 데나 찍어보세요.';
   map = L.map('map').setView([37.5665,126.9780],13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
   map.on('click',e=>onMapClick(e.latlng.lat,e.latlng.lng));
+  tryKakao();
 }
-function initKakao(){
+function tryKakao(){
   const s=document.createElement('script'); s.src='https://dapi.kakao.com/v2/maps/sdk.js?appkey='+KAKAO_JS_KEY+'&autoload=false';
   s.onload=()=>{
     try{
       kakao.maps.load(()=>{
         try{
+          const testDiv=document.createElement('div');
           const c=new kakao.maps.LatLng(37.5665,126.9780);
-          map=new kakao.maps.Map(document.getElementById('map'),{center:c,level:5});
-          mapStarted=true;
+          const kmap=new kakao.maps.Map(testDiv,{center:c,level:5});
           document.getElementById('kakaoBanner').textContent='카카오 지도로 열렸어요.';
-          kakao.maps.event.addListener(map,'click',e=>onMapClick(e.latLng.getLat(),e.latLng.getLng()));
-        }catch(err){ if(!didFallback){ showKakaoError(); initLeaflet(); } }
+          document.getElementById('mapError').style.display='block';
+          document.getElementById('mapError').innerHTML='카카오 인증은 됐어요. 다음 버전에서 카카오 지도로 완전히 바꿀게요. 지금은 일반 지도로 찍기가 돼요.';
+          useKakao=false;
+        }catch(e){}
       });
-    }catch(err){ if(!didFallback){ showKakaoError(); initLeaflet(); } }
+    }catch(e){}
   };
-  s.onerror=()=>{ if(!didFallback){ showKakaoError(); initLeaflet(); } };
   document.head.appendChild(s);
-  setTimeout(()=>{ if(!mapStarted && !didFallback){ showKakaoError(); initLeaflet(); } },3000);
 }
-window.addEventListener('error',e=>{
-  const m=String(e.message||'')+String(e.filename||'');
-  if(m.includes('Kakao')||m.includes('kakao')||m.includes('AppKey')){
-    if(!didFallback){ showKakaoError(); initLeaflet(); }
-  }
-});
-if(useKakao) initKakao(); else initLeaflet();
-function togglePanel(){ const p=document.getElementById('bottomPanel'); p.classList.toggle('collapsed'); if(map && map.invalidateSize) setTimeout(()=>map.invalidateSize(),50); }
+initLeaflet();
+function togglePanel(){ const p=document.getElementById('bottomPanel'); p.classList.toggle('collapsed'); if(map) setTimeout(()=>map.invalidateSize(),50); }
 function onLocToggle(){
-  const on=document.getElementById('useLoc').checked;
-  if(!on) return;
-  if(!navigator.geolocation){ alert('이 브라우저는 위치를 지원하지 않아요.'); document.getElementById('useLoc').checked=false; return; }
-  navigator.geolocation.getCurrentPosition(p=>{
-    A={lat:p.coords.latitude,lng:p.coords.longitude,label:'내 위치'};
-    setPin('A',A.lat,A.lng); document.getElementById('step').textContent='내 위치를 출발지로 했어요. 이제 지도에서 목적지를 찍으세요.';
-    if(B) findRoute();
-  },()=>{ alert('위치 권한을 허용해주세요.'); document.getElementById('useLoc').checked=false; });
+  const on=document.getElementById('useLoc').checked; if(!on) return;
+  if(!navigator.geolocation){ alert('위치 지원 안 함'); document.getElementById('useLoc').checked=false; return; }
+  navigator.geolocation.getCurrentPosition(p=>{ A={lat:p.coords.latitude,lng:p.coords.longitude,label:'내 위치'}; setPin('A',A.lat,A.lng); document.getElementById('step').textContent='내 위치를 출발지로 했어요. 이제 목적지를 찍으세요.'; if(B) findRoute(); },()=>{ alert('위치 권한 허용 필요'); document.getElementById('useLoc').checked=false; });
 }
 function onMapClick(lat,lng){
   if(!A){ A={lat,lng,label:'지도 선택'}; setPin('A',lat,lng); document.getElementById('step').textContent='출발지 찍었어요. 이제 목적지를 찍으세요.'; }
@@ -126,11 +105,6 @@ function onMapClick(lat,lng){
   else { B={lat,lng,label:'지도 선택'}; setPin('B',lat,lng); findRoute(); }
 }
 function setPin(which,lat,lng){
-  if(useKakao && window.kakao && map && map.getCenter){
-    if(markers[which]) markers[which].setMap(null);
-    markers[which]=new kakao.maps.Marker({position:new kakao.maps.LatLng(lat,lng),map});
-    map.setCenter(new kakao.maps.LatLng(lat,lng)); return;
-  }
   if(markers[which]) map.removeLayer(markers[which]);
   markers[which]=L.marker([lat,lng]).addTo(map).bindPopup(which==='A'?'출발지 A':'목적지 B').openPopup();
 }
@@ -139,28 +113,24 @@ async function findRoute(){
   const prof = mode==='walk'?'walking':mode==='bike'?'cycling':'driving';
   const url=`https://router.project-osrm.org/route/v1/${prof}/${A.lng},${A.lat};${B.lng},${B.lat}?overview=full&geometries=geojson&alternatives=3`;
   try{
-    const r=await fetch(url); const j=await r.json(); const routes=j.routes||[];
-    if(!routes.length) throw new Error('no route');
+    const r=await fetch(url); const j=await r.json(); const routes=j.routes||[]; if(!routes.length) throw new Error('no route');
     const best=routes[0];
-    if(useKakao && window.kakao && map && map.getCenter){ if(routeLayer) routeLayer.setMap(null); const path=best.geometry.coordinates.map(c=>new kakao.maps.LatLng(c[1],c[0])); routeLayer=new kakao.maps.Polyline({path,strokeWeight:6,strokeColor:'#0b2f6b',strokeOpacity:.9}); routeLayer.setMap(map); }
-    else { if(routeLayer) map.removeLayer(routeLayer); routeLayer=L.geoJSON(best.geometry,{style:{color:'#0b2f6b',weight:6}}).addTo(map); map.fitBounds(routeLayer.getBounds()); }
-    document.getElementById('routeInfo').innerHTML=`<b>최적 안심루트</b> · ${mode==='walk'?'도보':mode==='bike'?'자전거':'차량'} · 거리 ${(best.distance/1000).toFixed(2)}km · 약 ${Math.round(best.duration/60)}분<br><span class="small">A: ${A.label} (${A.lat.toFixed(5)}, ${A.lng.toFixed(5)}) → B: ${B.label} (${B.lat.toFixed(5)}, ${B.lng.toFixed(5)})</span>`;
-  }catch(e){ document.getElementById('routeInfo').textContent='경로를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 찍어보세요.'; }
+    if(routeLayer) map.removeLayer(routeLayer); routeLayer=L.geoJSON(best.geometry,{style:{color:'#0b2f6b',weight:6}}).addTo(map); map.fitBounds(routeLayer.getBounds());
+    document.getElementById('routeInfo').innerHTML=`<b>최적 안심루트</b> · ${mode==='walk'?'도보':mode==='bike'?'자전거':'차량'} · 거리 ${(best.distance/1000).toFixed(2)}km · 약 ${Math.round(best.duration/60)}분<br><span class="small">A ${A.lat.toFixed(5)},${A.lng.toFixed(5)} → B ${B.lat.toFixed(5)},${B.lng.toFixed(5)}</span>`;
+  }catch(e){ document.getElementById('routeInfo').textContent='경로를 불러오지 못했어요.'; }
 }
 function setMode(m){ mode=m; document.querySelectorAll('[id^=mode-]').forEach(b=>b.classList.remove('active')); document.getElementById('mode-'+m).classList.add('active'); if(A&&B) findRoute(); }
-function clearAll(){ A=B=null; if(useKakao&&window.kakao){Object.values(markers).forEach(x=>x.setMap(null));} else {Object.values(markers).forEach(x=>map.removeLayer(x));} markers={}; if(routeLayer){ if(useKakao&&window.kakao) routeLayer.setMap(null); else map.removeLayer(routeLayer);} document.getElementById('step').textContent='1단계: 지도에서 출발지를 찍으세요'; document.getElementById('routeInfo').textContent='아직 루트가 없어요.'; document.getElementById('useLoc').checked=false; }
+function clearAll(){ A=B=null; Object.values(markers).forEach(x=>map.removeLayer(x)); markers={}; if(routeLayer) map.removeLayer(routeLayer); document.getElementById('step').textContent='1단계: 지도에서 출발지를 찍으세요'; document.getElementById('routeInfo').textContent='아직 루트가 없어요.'; document.getElementById('useLoc').checked=false; }
 function swapAB(){ const t=A;A=B;B=t; if(A) setPin('A',A.lat,A.lng); if(B) setPin('B',B.lat,B.lng); if(A&&B) findRoute(); }
 function renderLayers(){
   const el=document.getElementById('layers'); const cats=[...new Set(LAYERS.map(x=>x.cat))];
-  el.innerHTML=cats.map(c=>`<b>${c}</b>`+LAYERS.filter(x=>x.cat===c).map((x,i)=>{const idx=LAYERS.indexOf(x); return `<label style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f1f1f1;font-size:13px"><input type="checkbox" onchange="toggleWMS(${idx},this.checked)"> ${x.name} <span class="small">${x.code}_WMS</span> <span style="margin-left:auto" class="dot" id="dot-${idx}"></span></label>`}).join('')).join('');
+  el.innerHTML=cats.map(c=>`<b>${c}</b>`+LAYERS.filter(x=>x.cat===c).map(x=>{const idx=LAYERS.indexOf(x); return `<label style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f1f1f1;font-size:13px"><input type="checkbox" onchange="toggleWMS(${idx},this.checked)"> ${x.name} <span class="small">${x.code}_WMS</span> <span style="margin-left:auto" class="dot" id="dot-${idx}"></span></label>`}).join('')).join('');
 }
 function wmsUrl(code){ return `https://www.safemap.go.kr/openapi2/${code}_WMS?serviceKey=${encodeURIComponent(safemapKey)}`; }
 function toggleWMS(idx,on){
   const x=LAYERS[idx]; const dot=document.getElementById('dot-'+idx);
-  if(!on){ if(wmsLayers[idx]){ if(useKakao&&window.kakao){} else map.removeLayer(wmsLayers[idx]); delete wmsLayers[idx]; } if(dot) dot.className='dot'; return; }
-  if(!safemapKey){ alert('설정에서 serviceKey를 입력하세요.'); if(dot) dot.className='dot fail'; return; }
+  if(!on){ if(wmsLayers[idx]){ map.removeLayer(wmsLayers[idx]); delete wmsLayers[idx]; } if(dot) dot.className='dot'; return; }
   if(dot) dot.className='dot load';
-  if(useKakao && window.kakao && map && map.getCenter){ if(dot) dot.className='dot fail'; alert('카카오맵에서는 WMS 레이어가 바로 안 붙어요.'); return; }
   try{
     const layer=L.tileLayer.wms(wmsUrl(x.code),{layers:x.code,format:'image/png',transparent:true,opacity:.75,version:'1.1.1'});
     layer.on('tileerror',()=>{ if(dot) dot.className='dot fail'; });
@@ -169,14 +139,6 @@ function toggleWMS(idx,on){
     setTimeout(()=>{ if(dot && dot.className.includes('load')) dot.className='dot ok'; },4000);
   }catch(e){ if(dot) dot.className='dot fail'; }
 }
-function checkAll(){ document.getElementById('checkResult').textContent='전체 확인: 레이어를 하나씩 켜면서 초록/빨강 상태를 확인하세요.'; LAYERS.forEach((_,i)=>{ const cb=document.querySelectorAll('#layers input')[i]; if(cb && !cb.checked){ cb.checked=true; toggleWMS(i,true); } }); }
 function toggleLayer(){ const p=document.getElementById('layerPanel'); p.style.display=p.style.display==='block'?'none':'block'; renderLayers(); }
-function toggleSet(){
-  const key=prompt('serviceKey를 입력하세요 (현재 키를 바꾸려면 새 키 입력, 그대로 두려면 취소)', safemapKey);
-  if(key!==null && key.trim()){ safemapKey=key.trim(); localStorage.setItem('ansimgil_key',safemapKey); alert('키 저장했어요.'); }
-}
-function loadMemos(){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map((m,i)=>`<div class="memo"><b>${m.date}</b> · ${m.place||'위치 메모'}<br>${m.text} <button onclick="delMemo(${i})" style="float:right">삭제</button></div>`).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
-function addMemo(){ const t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.unshift({text:t,date:new Date().toLocaleString(),place: A?`A ${A.lat.toFixed(4)},${A.lng.toFixed(4)}` : B?`B ${B.lat.toFixed(4)},${B.lng.toFixed(4)}` : '지도'}); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); document.getElementById('memoText').value=''; loadMemos(); }
-function delMemo(i){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); arr.splice(i,1); localStorage.setItem('ansimgil_memos',JSON.stringify(arr)); loadMemos(); }
-renderLayers(); loadMemos();
-</script></body></html>
+function loadMemos(){ const arr=JSON.parse(localStorage.getItem('ansimgil_memos')||'[]'); document.getElementById('memoList').innerHTML=arr.map((m,i)=>`<div class="memo"><b>${m.date}</b><br>${m.text} <button onclick="delMemo(${i})" style="float:right">삭제</button></div>`).join('') || '<div class="small">아직 메모가 없어요.</div>'; }
+function addMemo(){ const t=document.getElementById('memoText').value.trim(); if(!t) return alert('메모를 적어주세요.'); const arr=JSON.parse(local
