@@ -2,21 +2,21 @@
 <title>동네안심길 - ansimgil</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=894d3481b0040f5f9b3de9972193f07d&libraries=services&autoload=false"></script>
-<style>*{box-sizing:border-box}body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#eef7f0;color:#1a2e22;-webkit-font-smoothing:antialiased;font-size:13px}
+<style>*{box-sizing:border-box}body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Malgun Gothic',sans-serif;background:#eef7f0;color:#1a2e22;-webkit-font-smoothing:antialiased;font-size:13px;overflow:hidden}
 header{min-height:48px;background:#fff;display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid #e5e7eb}header b{font-size:17px;font-weight:900;letter-spacing:-.3px}
 header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer}
 #msg{background:#fef3c7;padding:8px 16px;font-size:13px;display:none}
-.layout{display:flex;align-items:stretch;height:calc(100vh - 48px);min-height:560px}
-.mapWrap{flex:1.55;min-width:0;background:#e8eaf6;overflow:hidden;position:relative}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100vh - 48px);min-height:560px;overflow:hidden}
+.mapWrap{min-width:0;min-height:0;background:#e8eaf6;overflow:hidden;position:relative}
 #map{width:100%;height:100%;min-height:100%;background:#e8eaf6;display:block}
-.panel{flex:1;min-width:340px;max-width:520px;background:#f7fdf8;border-left:1px solid #e5e7eb;padding:14px 14px 18px;overflow-y:auto;height:100%}
+.panel{width:400px;max-width:400px;min-width:0;background:#f7fdf8;border-left:1px solid #e5e7eb;padding:14px 14px 18px;overflow-y:auto;overflow-x:hidden;height:100%}
 .titleWrap{display:flex;align-items:center;gap:10px;margin:10px 0 0;padding:10px 12px;background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 100%);border:1px solid #d1fae5;border-radius:14px}
 .titleIcon{width:42px;height:42px;flex:0 0 42px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#166534;border-radius:12px;box-shadow:0 4px 12px rgba(22,101,52,.25)}
 .titleWrap h2{margin:0;font-size:22px;line-height:1.2;font-weight:900;letter-spacing:-.5px;color:#14532d}
 .titleWrap h2 span{color:#166534}
 .titleWrap p{margin:2px 0 0;font-size:12px;font-weight:500;color:#4b5563;letter-spacing:-.2px}
 .searchLabel{font-size:12px;font-weight:800;margin:14px 0 6px;display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 7px}.dot-a{background:#16a34a}.dot-b{background:#dc2626}
-.searchBox{display:flex;align-items:center;gap:8px;border:1.5px solid #b9d9c2;border-radius:11px;padding:7px 7px 7px 11px;background:#fff;box-shadow:none;overflow:hidden}.searchBox:focus-within{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}
+.searchBox{display:flex;align-items:center;gap:8px;border:1.5px solid #b9d9c2;border-radius:11px;padding:7px 7px 7px 11px;background:#fff;box-shadow:none;overflow:hidden;width:100%;max-width:100%}.searchBox:focus-within{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}
 .searchBox input{flex:1;min-width:0;border:none!important;border-width:0!important;outline:none!important;box-shadow:none!important;background:transparent!important;background-color:transparent!important;padding:0!important;margin:0!important;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#111827;-webkit-appearance:none;appearance:none}.searchBox input::placeholder{color:#9ca3af}
 .searchBox button{flex:0 0 auto;border:0;background:#166534;color:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:12px;font-weight:800;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
 .searchRes:empty{display:none}.searchRes{margin-top:6px;background:#fff;border:1px solid #e5e7eb;border-radius:11px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}.searchRes>div{padding:10px 11px;cursor:pointer;border-bottom:1px solid #f3f4f6;line-height:1.5;font-size:12px}.searchRes>div:last-child{border-bottom:0}.searchRes>div:hover{background:#f0fdf4}.searchRes .small{font-size:11px;color:#6b7280}
@@ -35,7 +35,7 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 #mode-bike.active{background:#ecfdf5;border-color:#059669;color:#065f46;box-shadow:0 0 0 2px #d1fae5}
 #mode-car.active{background:#1e3a8a;border-color:#1e3a8a;color:#fff;box-shadow:0 0 0 2px #bfdbfe}#mode-car.active .ico{color:#fff}
 .modeRow{margin-top:10px;padding:8px 0 2px}
-.loc-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;color:#166534;cursor:pointer;white-space:nowrap;user-select:none;line-height:1}.loc-pill input{-webkit-appearance:none;appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;cursor:pointer;border:1.5px solid #16a34a;border-radius:4px;background:#fff;display:inline-grid;place-content:center}.loc-pill input:checked{background:#166534;border-color:#166534}.loc-pill input:checked::after{content:"✓";color:#fff;font-size:11px;font-weight:900;line-height:1}.loc-pill:has(input:checked){background:#166534;color:#fff;border-color:#166534}.loc-pill:has(input:checked) input{border-color:#fff;background:#fff}.loc-pill:has(input:checked) input:checked::after{color:#166534}
+.loc-pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;color:#166534;cursor:pointer;white-space:nowrap;user-select:none;line-height:1;flex:0 0 auto}.loc-pill input{-webkit-appearance:none;appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;cursor:pointer;border:1.5px solid #16a34a;border-radius:4px;background:#fff;display:inline-grid;place-content:center}.loc-pill input:checked{background:#166534;border-color:#166534}.loc-pill input:checked::after{content:"✓";color:#fff;font-size:11px;font-weight:900;line-height:1}.loc-pill:has(input:checked){background:#166534;color:#fff;border-color:#166534}.loc-pill:has(input:checked) input{border-color:#fff;background:#fff}.loc-pill:has(input:checked) input:checked::after{color:#166534}
 .nearbyLabel{font-size:12px;font-weight:800;margin:12px 0 5px}
 .nearbyRow{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 6px}.nearbyRow button{padding:6px 11px;font-size:12px;font-weight:700;border:1px solid #dbeafe;background:#fff;color:#1e3a8a;border-radius:999px}.nearbyRow button.active{background:#166534;border-color:#166534;color:#fff}
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:10px 11px;font-size:12px;line-height:1.7;margin-top:10px}.small{font-size:11px;color:#666}
@@ -45,7 +45,7 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 .score{margin:12px 0;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:11px;padding:10px 11px;font-size:12px;line-height:1.8}.score b{font-size:14px}.score .bar{height:7px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:6px 0}.score .bar div{height:100%;background:#059669}
 .memoRow{display:flex;gap:8px;align-items:center;margin:14px 0}.memoRow input{flex:1;padding:10px 12px;border:1px solid #e5e7eb;border-radius:999px;font-size:13px;outline:none;min-width:0;background:#fff;font-family:'Noto Sans KR',sans-serif}.memoRow input:focus{border-color:#16a34a;box-shadow:0 0 0 3px #dcfce7}.memoRow button{flex:0 0 auto;border:0;background:#166534;color:#fff;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:700;white-space:nowrap}
 h3{font-weight:800;letter-spacing:-.3px;font-size:14px;margin:14px 0 8px}
-@media(max-width:820px){.layout{flex-direction:column;height:auto}.panel{max-width:none;min-width:0;border-left:0;border-top:1px solid #e5e7eb;height:auto;overflow:visible}#map{height:420px;min-height:420px}.mapWrap{height:420px}.loc-pill{margin-left:0}}
+@media(max-width:820px){body{overflow:auto}.layout{display:flex;flex-direction:column;height:auto;overflow:visible}.panel{width:100%;max-width:none;min-width:0;border-left:0;border-top:1px solid #e5e7eb;height:auto;overflow:visible}#map{height:420px;min-height:420px}.mapWrap{height:420px;flex:0 0 420px}.loc-pill{margin-left:0}}
 </style></head><body>
 <header><b>🛡️ 동네안심길</b><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
 <div id="msg"></div>
@@ -132,20 +132,23 @@ function fillInputFromClick(which, lat, lng){
 }
 function initMap(){
   try{
-    map=new kakao.maps.Map(document.getElementById('map'),{center:new kakao.maps.LatLng(37.5665,126.9780),level:5});
+    var el=document.getElementById('map');
+    if(!el){ showMsg('지도 박스가 없어요','#fecaca'); return; }
+    map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(37.5665,126.9780),level:5});
     if(window.kakao.maps.services){ placesService=new kakao.maps.services.Places(); geocoder=new kakao.maps.services.Geocoder(); }
     kakao.maps.event.addListener(map,'click',function(e){ onMapClick(e.latLng.getLat(), e.latLng.getLng()); });
     renderLayers(); loadSaved();
     placeAllLayersOnMap();
     setTimeout(function(){ try{ map.relayout(); map.setCenter(new kakao.maps.LatLng(37.5665,126.9780)); }catch(e){} },200);
+    setTimeout(function(){ try{ map.relayout(); }catch(e){} },800);
     window.addEventListener('resize',function(){ try{ map.relayout(); }catch(e){} });
     var _t=null; kakao.maps.event.addListener(map,'bounds_changed',function(){ clearTimeout(_t); _t=setTimeout(function(){ try{ placeAllLayersOnMap(); }catch(e){} },800); });
   }catch(e){ showMsg('지도 생성 실패: '+e.message,'#fecaca'); }
 }
-if(typeof kakao==='undefined'){ showMsg('카카오 SDK가 안 불러와졌어요','#fecaca'); }
+if(typeof kakao==='undefined'){ showMsg('카카오 SDK가 안 불러와졌어요. 도메인 등록 / 키 확인 필요','#fecaca'); }
 else{
   kakao.maps.load(initMap);
-  setTimeout(function(){ if(!map) showMsg('지도가 안 떴어요','#fecaca'); },3000);
+  setTimeout(function(){ if(!map) showMsg('지도가 안 떴어요. F12 콘솔에서 kakao 오류 확인 필요','#fecaca'); },3000);
 }
 function onLocToggle(){var on=document.getElementById('useLoc').checked;if(!on)return;if(!navigator.geolocation){alert('위치 지원 안 함');document.getElementById('useLoc').checked=false;return;}navigator.geolocation.getCurrentPosition(function(p){A={lat:p.coords.latitude,lng:p.coords.longitude};fromName='내 위치';document.getElementById('fromSearch').value=fromName;setPin('출발',A.lat,A.lng);document.getElementById('toSearch').focus();if(B)findRoute(true);},function(){alert('위치 권한 허용 필요');document.getElementById('useLoc').checked=false;});}
 function onMapClick(lat,lng){
