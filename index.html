@@ -38,13 +38,48 @@ header button{border:1px solid #e5e7eb;background:#fff;border-radius:999px;paddi
 .memoRow{display:flex;gap:8px;align-items:center;margin:14px 0}.memoRow input{flex:1;padding:10px 12px;border:1px solid #e5e7eb;border-radius:999px;font-size:13px;outline:none;background:#fff}.memoRow button{border:0;background:#FEE500;color:#191919;border-radius:999px;padding:10px 14px;font-size:13px;font-weight:700}
 h3{font-weight:800;font-size:14px;margin:14px 0 8px}
 @media(max-width:820px){body{overflow:auto}.layout{display:flex;flex-direction:column;height:auto}.panel{width:100%;max-width:none;border-left:0;border-top:1px solid #e5e7eb;height:auto;overflow:visible}#map{height:420px}.mapWrap{height:420px;flex:0 0 420px}.loc-pill{margin-left:0}}
+/* === 디자인 다듬기 (틀·기능 변경 없음) === */
+header{box-shadow:0 1px 10px rgba(15,23,42,.07);position:relative;z-index:5}
+header button{transition:all .15s}header button:hover{background:#FFF9CC;border-color:#FEE500}
+.panel{background:linear-gradient(180deg,#FDFDFB 0%,#F7F7F2 100%)}
+.panel::-webkit-scrollbar{width:8px}.panel::-webkit-scrollbar-thumb{background:#d6d3cd;border-radius:99px}.panel::-webkit-scrollbar-track{background:transparent}
+.titleBanner{border-radius:16px;padding:22px 18px 16px;box-shadow:0 6px 16px rgba(11,47,107,.25)}
+.titleBanner h1{font-size:26px;margin-top:0}
+.titleBanner p{font-size:12.5px}
+button{transition:all .15s ease}
+.searchBox{box-shadow:0 1px 3px rgba(15,23,42,.06);transition:border-color .15s, box-shadow .15s}
+.searchBox:focus-within{border-color:#eab308;box-shadow:0 0 0 3px rgba(254,229,0,.35)}
+.searchBox button{transition:all .15s}.searchBox button:hover{filter:brightness(.96)}
+.searchRes{box-shadow:0 4px 14px rgba(15,23,42,.08)}
+.searchRes>div{transition:background .12s}
+.mode-btn{border:1.5px solid #E5E5E5;border-radius:12px;padding:7px 5px 6px;background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.mode-btn:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(15,23,42,.1)}
+.mode-btn .ico{font-size:16px}
+#mode-walk.active{box-shadow:0 2px 8px rgba(234,88,12,.25)}#mode-bike.active{box-shadow:0 2px 8px rgba(25,25,25,.18)}#mode-car.active{box-shadow:0 2px 8px rgba(30,58,138,.35)}
+.loc-pill{transition:all .15s}.loc-pill:hover{border-color:#16a34a}
+.nearbyRow button{transition:all .15s}.nearbyRow button:hover{background:#FFF9CC;transform:translateY(-1px)}
+.nearbyRow button.active{box-shadow:0 2px 8px rgba(254,229,0,.5)}
+.swapBtn{box-shadow:0 2px 6px rgba(15,23,42,.18);transition:transform .15s}.swapBtn:hover{transform:translate(-50%,-50%) scale(1.1)}
+.confirmBtn{box-shadow:0 2px 8px rgba(254,229,0,.55);transition:all .15s}.confirmBtn:hover{filter:brightness(.96);transform:translateY(-1px)}
+.resetBtn{transition:all .15s}.resetBtn:hover{background:#f9fafb}
+.card{border-radius:14px;box-shadow:0 1px 4px rgba(15,23,42,.05);border-color:#e8e8e3}
+.score{border-radius:14px;box-shadow:0 1px 4px rgba(15,23,42,.05)}
+.score .bar{height:8px}
+.saved{border-radius:14px;box-shadow:0 1px 4px rgba(15,23,42,.05)}
+.saved button{border-radius:999px;transition:all .15s}.saved button:hover{background:#FFF9CC}
+.memoRow input{transition:border-color .15s, box-shadow .15s}.memoRow input:focus{border-color:#eab308;box-shadow:0 0 0 3px rgba(254,229,0,.3)}
+.memoRow button{box-shadow:0 2px 8px rgba(254,229,0,.5);transition:all .15s}.memoRow button:hover{filter:brightness(.96)}
+h3{border-left:4px solid #FEE500;padding-left:8px}
+#layerPanel{border-radius:16px;box-shadow:0 14px 34px rgba(15,23,42,.22)}
+#layerPanel label{transition:all .12s}#layerPanel label:hover{background:#FFF9CC;border-color:#FEE500}
+.searchLabel{letter-spacing:-.2px}
 </style></head><body>
 <header><div class="brand"><div class="brandBadge"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z" fill="#FEE500"/><path d="M8.5 12.2l2.4 2.4 4.6-4.9" stroke="#0b2f6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="brandName">동네안심길</div><div class="brandSub">우리동네 안전지도</div></div></div><span style="margin-left:auto"></span><button onclick="toggleLayer()">레이어</button></header>
 <div id="msg"></div>
 <div class="layout">
 <div class="mapWrap"><div id="map"></div><div id="fallbackMap"></div></div>
 <div class="panel">
-<div class="titleBanner"><span class="tb-badge">SAFEMAP 안전 데이터</span><h1>우리동네 <span class="hl">안심길</span></h1><p>안전한 길로, 마음 편히 걸어요</p><div class="tb-chips"><span>📹 CCTV</span><span>💡 보안등</span><span>🔔 안전비상벨</span><span>🚸 스쿨존</span></div></div>
+<div class="titleBanner"><h1>우리동네 <span class="hl">안심길</span></h1><p>안전한 길로, 마음 편히 걸어요</p><div class="tb-chips"><span>📹 CCTV</span><span>💡 보안등</span><span>🔔 안전비상벨</span><span>🚸 스쿨존</span></div></div>
 <div class="row"><button id="mode-walk" class="active mode-btn" onclick="setMode('walk')"><span class="ico">🚶</span>도보</button><button id="mode-bike" class="mode-btn" onclick="setMode('bike')"><span class="ico">🚲</span>자전거</button><button id="mode-car" class="mode-btn" onclick="setMode('car')"><span class="ico">🚗</span>차량</button><label class="loc-pill"><input type="checkbox" id="useLoc" onchange="onLocToggle()"> 내 위치</label></div>
 <div class="nearbyLabel">주변검색</div>
 <div class="nearbyRow"><button data-cat="FD6" onclick="searchNearby('FD6','음식점',this)">🍽️ 음식점</button><button data-cat="CE7" onclick="searchNearby('CE7','카페',this)">☕ 카페</button><button data-cat="CS2" onclick="searchNearby('CS2','편의점',this)">🏪 편의점</button><button data-cat="HP8" onclick="searchNearby('HP8','병원',this)">🏥 병원</button><button data-cat="PM9" onclick="searchNearby('PM9','약국',this)">💊 약국</button><button data-cat="OL7" onclick="searchNearby('OL7','주유소',this)">⛽ 주유소</button><button data-cat="PK6" onclick="searchNearby('PK6','주차장',this)">🅿️ 주차장</button><button data-cat="BK9" onclick="searchNearby('BK9','은행',this)">🏦 은행</button></div>
